@@ -15,7 +15,7 @@ module Sightline
     # The jobs dashboard's path for the navigation; nil finds Mission Control – Jobs' mount point, if any.
     attr_accessor :jobs_path
 
-    attr_reader :pages
+    attr_reader :stats, :charts, :notes, :pages
 
     def initialize
       @base_controller = "ActionController::Base"
@@ -23,7 +23,31 @@ module Sightline
       @title = "Admin"
       @overview_intro = nil
       @jobs_path = nil
+      @stats = []
+      @charts = []
+      @notes = []
       @pages = []
+    end
+
+    # A number on the Overview: c.stat("Players") { User.count }
+    def stat(label, note: nil, format: nil, &block)
+      @stats << Overview::Stat.new(label: label, block: block, note: note, format: format)
+    end
+
+    # A daily line chart, one line per series:
+    # c.trend("Last 30 days", days: 30) { |dates| { "Sign-ups" => User.group("date(created_at)").count } }
+    def trend(title, days: 30, totals: {}, &block)
+      @charts << Overview::Trend.new(title: title, days: days, block: block, totals: totals.transform_keys(&:to_s))
+    end
+
+    # A bar per day: c.bars("Orders per day", days: 7) { |dates| Order.group("date(created_at)").count }
+    def bars(title, days: 7, &block)
+      @charts << Overview::Bars.new(title: title, days: days, block: block)
+    end
+
+    # Fine print under the Overview's charts, e.g. what the numbers leave out.
+    def note(text = nil, &block)
+      @notes << Overview::Note.new(text: block || text)
     end
 
     # A page of the app's own, listed in the navigation after Overview, Health and Jobs, at /<mount>/<path>.

@@ -1,4 +1,5 @@
 require "sightline/version"
+require "sightline/overview"
 require "sightline/configuration"
 require "sightline/engine"
 

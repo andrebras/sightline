@@ -1,0 +1,7 @@
+<%= tag.section class: "sl-section", id: id do %>
+  <div class="sl-section-heading">
+    <h2><%= title %></h2>
+    <% if link %><%= link_to link.first, link.last, class: "sl-link" %><% end %>
+  </div>
+  <%= body %>
+<% end %>
