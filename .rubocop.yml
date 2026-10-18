@@ -1,0 +1,64 @@
+# Sightline's own lint config, for when it lives in its own repo: the same rules as the app it grew up in (Plymico's
+# .rubocop.yml), with paths relative to the gem. Inside Plymico, bin/rubocop uses Plymico's config instead.
+plugins:
+  - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.4
+  Exclude:
+    - "bin/**/*"
+    - "test/dummy/tmp/**/*"
+    - "vendor/**/*"
+
+# Rails' generators and guides write double quotes and `[ a, b ]`.
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: space
+Layout/LineLength:
+  Max: 120
+
+# Ruby 3.4 already warns when a string literal is mutated; the magic comment adds nothing.
+Style/FrozenStringLiteralComment:
+  Enabled: false
+# Class comments where they help, not a required header on every class.
+Style/Documentation:
+  Enabled: false
+# The interface is English-only.
+Rails/I18nLocaleTexts:
+  Enabled: false
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
+# Roomier than RuboCop's defaults (10 lines, AbcSize 17), still flag methods that do too much.
+Metrics:
+  Exclude:
+    - "test/dummy/config/**/*"
+Metrics/MethodLength:
+  Max: 20
+Metrics/AbcSize:
+  Max: 25
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 10
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+Metrics/BlockLength:
+  Exclude:
+    - "config/routes.rb"
+    - "test/**/*"
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+# Integration tests check a whole workflow.
+Minitest/MultipleAssertions:
+  Max: 20
+Minitest/EmptyLineBeforeAssertionMethods:
+  Enabled: false

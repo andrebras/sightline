@@ -1,0 +1,154 @@
+/* Sightline's pages. Every class starts with sl-, and everything sits inside .sl.
+   Colours and fonts are custom properties with neutral defaults; an app sets its own on .sl, e.g.
+   .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}. The defaults use :where() so any .sl rule wins. */
+:where(.sl){
+  --sl-ink:#1f2328;
+  --sl-muted:#636c76;
+  --sl-label:#57606a;
+  --sl-accent:#0969da;
+  --sl-surface:#fff;
+  --sl-surface-alt:#f6f8fa;
+  --sl-line:#d8dee4;
+  --sl-ok:#1a7f37;
+  --sl-ok-soft:#e6f4ea;
+  --sl-warning:#9a6700;
+  --sl-warning-soft:#fff8c5;
+  --sl-problem:#cf222e;
+  --sl-problem-soft:#ffebe9;
+  --sl-radius:12px;
+  --sl-font:inherit;
+  --sl-font-heading:inherit;
+  --sl-series-1:#0969da;
+  --sl-series-2:#cf222e;
+  --sl-series-3:#1a7f37;
+  --sl-series-4:#9a6700;
+  --sl-series-5:#8250df;
+  --sl-series-6:#57606a;
+}
+.sl{color:var(--sl-ink);font-family:var(--sl-font)}
+.sl *,.sl *::before,.sl *::after{box-sizing:border-box}
+
+/* Header and navigation. */
+.sl-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-bottom:20px}
+/* The title block takes the free space, so the page's actions and icon sit together on the right. */
+.sl-header>div:first-child{flex:1 1 auto}
+.sl-icon{font-size:56px;line-height:1;color:var(--sl-line);align-self:center}
+.sl-eyebrow{display:block;font-size:10px;letter-spacing:2px;font-weight:700;color:var(--sl-label);text-transform:uppercase;margin-bottom:10px}
+.sl-title{font-family:var(--sl-font-heading);margin:0 0 6px}
+.sl-intro{margin:0;color:var(--sl-muted)}
+.sl-nav{display:flex;gap:4px;border-bottom:1px solid var(--sl-line);margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
+.sl-nav-link{padding:10px 16px;font-size:13px;color:var(--sl-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;text-decoration:none}
+.sl-nav-link:hover{color:var(--sl-ink)}
+.sl-nav-link.sl-current{border-bottom-color:var(--sl-accent);color:var(--sl-accent);font-weight:600}
+
+/* Sections and panels. */
+.sl-section{margin:0 0 32px}
+.sl-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 12px}
+.sl-section-heading h2{font-size:16px;margin:0}
+.sl-link{font-size:12px;font-weight:600;color:var(--sl-accent)}
+.sl-panel{background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius);padding:20px 24px}
+.sl-empty{color:var(--sl-muted);margin:0}
+.sl-fine-print{font-size:11px;color:var(--sl-muted);margin:20px 0}
+
+/* Stat cards: a row of numbers, two per line on a phone. */
+.sl-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 32px}
+.sl-stat{display:flex;flex-direction:column;gap:2px;background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius);padding:16px 20px;min-width:0}
+.sl-stat-label{font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--sl-label);text-transform:uppercase}
+.sl-stat-value{font-family:var(--sl-font-heading);font-weight:400;font-size:32px;line-height:1.2}
+.sl-stat-note{font-size:11px;color:var(--sl-muted)}
+.sl-stat.sl-warning .sl-stat-value,.sl-stat.sl-warning .sl-stat-note{color:var(--sl-warning)}
+.sl-stat.sl-problem .sl-stat-value,.sl-stat.sl-problem .sl-stat-note{color:var(--sl-problem)}
+
+/* Trend chart. */
+.sl-legend{list-style:none;display:flex;flex-wrap:wrap;gap:8px 24px;padding:0;margin:0 0 12px;font-size:13px}
+.sl-legend li{display:flex;align-items:center;gap:8px}
+.sl-legend strong{font-weight:600}
+.sl-key{width:14px;height:4px;border-radius:2px;background:var(--sl-colour)}
+.sl-chart{width:100%;height:auto;display:block}
+.sl-grid{stroke:var(--sl-line);stroke-width:1}
+.sl-axis{font-size:12px;fill:var(--sl-muted)}
+.sl-line{fill:none;stroke:var(--sl-colour);stroke-width:2;stroke-linejoin:round}
+.sl-dot{fill:var(--sl-colour);stroke:var(--sl-surface);stroke-width:2}
+.sl-series-1{--sl-colour:var(--sl-series-1)}
+.sl-series-2{--sl-colour:var(--sl-series-2)}
+.sl-series-3{--sl-colour:var(--sl-series-3)}
+.sl-series-4{--sl-colour:var(--sl-series-4)}
+.sl-series-5{--sl-colour:var(--sl-series-5)}
+.sl-series-6{--sl-colour:var(--sl-series-6)}
+
+/* Bar chart: a column per day. */
+.sl-bars{list-style:none;display:grid;grid-template-columns:repeat(var(--sl-bar-count,7),minmax(0,1fr));gap:12px;align-items:end;height:200px;margin:0}
+.sl-bars li{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;min-width:0}
+.sl-bars strong{font-size:13px}
+.sl-bar{display:block;width:100%;max-width:44px;min-height:2px;background:var(--sl-accent);border-radius:4px 4px 0 0}
+.sl-bars small{font-size:12px;color:var(--sl-muted);white-space:nowrap}
+
+/* Tables: rows of cells, stacked label above value on a phone. */
+.sl-table-wrap{padding:0;overflow:hidden}
+.sl-table-wrap .sl-empty{padding:16px 20px}
+.sl-table{width:100%;border-collapse:collapse;font-size:13px}
+.sl-table th{text-align:left;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--sl-label);background:var(--sl-surface-alt);padding:10px 16px;border-bottom:1px solid var(--sl-line)}
+.sl-table td{padding:10px 16px;border-bottom:1px solid var(--sl-line);vertical-align:top;overflow-wrap:anywhere}
+.sl-table tr:last-child td{border-bottom:0}
+
+/* Health: the headline, then a line per check with its status. */
+.sl-headline{display:flex;align-items:center;gap:10px;margin:0 0 24px;padding:14px 18px;border-radius:var(--sl-radius);font-weight:600;background:var(--sl-ok-soft);color:var(--sl-ok)}
+.sl-headline::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor;flex:none}
+.sl-headline.sl-warning{background:var(--sl-warning-soft);color:var(--sl-warning)}
+.sl-headline.sl-problem{background:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-checks{list-style:none;margin:0;padding:0;background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius)}
+.sl-check{display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid var(--sl-line)}
+.sl-check:last-child{border-bottom:0}
+.sl-badge{flex:none;width:72px;text-align:center;font-size:10px;letter-spacing:1px;font-weight:700;text-transform:uppercase;border-radius:20px;padding:3px 0;margin-top:2px;background:var(--sl-ok-soft);color:var(--sl-ok)}
+.sl-check.sl-warning .sl-badge{background:var(--sl-warning-soft);color:var(--sl-warning)}
+.sl-check.sl-problem .sl-badge{background:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-check-body{min-width:0;flex:1}
+.sl-check-name{font-weight:600}
+.sl-check-summary{color:var(--sl-ink)}
+.sl-check.sl-warning .sl-check-summary{color:var(--sl-warning)}
+.sl-check.sl-problem .sl-check-summary{color:var(--sl-problem)}
+.sl-check-detail{margin:4px 0 0;padding:0;list-style:none;font-size:12px;color:var(--sl-muted);overflow-wrap:anywhere}
+.sl-check-detail li+li{margin-top:2px}
+.sl-check .sl-link{display:inline-block;margin-top:6px}
+.sl-state{font-size:12px;font-weight:600}
+.sl-state.sl-ok{color:var(--sl-ok)}
+.sl-state.sl-problem{color:var(--sl-problem)}
+.sl-state.sl-muted,.sl-muted{color:var(--sl-muted)}
+.sl-table small.sl-muted{display:block;font-size:11px}
+
+/* Cards of facts, side by side: System and Storage. */
+.sl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:0 0 32px}
+.sl-card h2{font-size:16px;margin:0 0 12px}
+.sl-facts{margin:0;font-size:13px}
+.sl-facts div{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-top:1px solid var(--sl-line)}
+.sl-facts dt{color:var(--sl-muted)}
+.sl-facts dd{margin:0;text-align:right;font-weight:600;overflow-wrap:anywhere;min-width:0}
+
+/* The refresh picker in Health's header. */
+.sl-refresh{display:flex;align-items:center;gap:2px;font-size:12px;border:1px solid var(--sl-line);border-radius:8px;padding:3px;background:var(--sl-surface)}
+.sl-refresh-label{color:var(--sl-label);font-weight:600;padding:0 8px}
+.sl-refresh-choice{padding:4px 10px;border-radius:6px;color:var(--sl-muted);text-decoration:none}
+.sl-refresh-choice:hover{color:var(--sl-ink)}
+.sl-refresh-choice.sl-current{background:var(--sl-accent);color:var(--sl-surface);font-weight:600}
+
+@media(max-width:700px){
+  .sl-check{padding:12px 14px;gap:10px;flex-direction:column}
+  .sl-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sl-stat{padding:14px 16px}
+  .sl-stat-value{font-size:28px}
+  .sl-panel{padding:16px}
+  .sl-bars{gap:6px;height:170px}
+  .sl-bars small{font-size:10px}
+  .sl-table thead{display:none}
+  .sl-table,.sl-table tbody,.sl-table tr,.sl-table td{display:block}
+  .sl-table tr{border-bottom:1px solid var(--sl-line);padding:8px 0}
+  .sl-table tr:last-child{border-bottom:0}
+  .sl-table td{border:0;padding:3px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;text-align:right}
+  .sl-table td::before{content:attr(data-label);flex:none;text-align:left;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--sl-label)}
+  .sl-table td:first-child{display:block;text-align:left}
+  .sl-table td:first-child::before{display:none}
+  /* The chart scales down with the screen; its labels, lines and dots are drawn larger so they stay readable. */
+  .sl-axis{font-size:28px}
+  .sl-line{stroke-width:4}
+  .sl-dot{r:7px;stroke-width:3}
+}

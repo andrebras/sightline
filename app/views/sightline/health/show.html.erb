@@ -1,0 +1,50 @@
+<%= tag.div class: "sl sl-health", data: { sl_refresh: @refresh } do %>
+  <%= render "sightline/shared/header", title: "Health",
+                                        intro: "Whether the background work, the storage and the app's own checks are fine.",
+                                        actions: render("refresh", refresh: @refresh) %>
+
+  <p class="sl-headline sl-<%= @health.status %>" role="status"><%= @health.headline %></p>
+
+  <%= sl_section "Checks" do %>
+    <%= sl_checks do %>
+      <% @health.results.each do |name, result| %>
+        <%= sl_check name, result %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="sl-cards">
+    <% system = @health.system %>
+    <%= sl_card "System", [
+          [ "Ruby", system.ruby ],
+          [ "Rails", system.rails ],
+          [ "Booted", system.booted_at ? "#{time_ago_in_words(system.booted_at)} ago" : "–" ],
+          [ "Memory", system.memory ? number_to_human_size(system.memory) : "Unknown" ],
+          [ "Running on", system.running_on ]
+        ], id: "sl-system" %>
+    <% if (storage = @health.storage) %>
+      <% space = storage.space %>
+      <%= sl_card "Storage", [
+            [ "Free", space ? "#{number_to_human_size(space.available)} of #{number_to_human_size(space.total)}" : "Unknown" ],
+            [ "Volume", storage.path ],
+            *storage.database_files.map { |file| [ file.name, number_to_human_size(file.size) ] }
+          ], id: "sl-storage" %>
+    <% end %>
+  </div>
+
+  <% if @health.solid_queue %>
+    <% tasks = @health.solid_queue.tasks_with_runs %>
+    <%= sl_section "Recurring tasks", link: ([ "Open Jobs", sightline_jobs_url ] if sightline_jobs_url) do %>
+      <% states = { ok: "On schedule", overdue: "Overdue", not_due: "Not due yet", not_kept: "Run not kept", unknown: "Unknown schedule" } %>
+      <%= sl_table [ "Task", "Schedule", "Last run", "Next run", "State" ],
+                   tasks.map { |task|
+                     [ tag.strong(task.key) + tag.small(task.job, class: "sl-muted"),
+                       task.schedule,
+                       task.last_run ? "#{time_ago_in_words(task.last_run)} ago" : "–",
+                       task.next_run ? "in #{time_ago_in_words(task.next_run)}" : "–",
+                       tag.span(states.fetch(task.state), class: [ "sl-state", { ok: "sl-ok", overdue: "sl-problem" }.fetch(task.state, "sl-muted") ]) ]
+                   },
+                   empty: "No recurring tasks registered." %>
+    <% end %>
+  <% end %>
+<% end %>

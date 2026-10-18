@@ -1,0 +1,14 @@
+<% label = { ok: "OK", warning: "Warning", problem: "Problem" }.fetch(result.status) %>
+<li class="sl-check sl-<%= result.status %>">
+  <span class="sl-badge"><%= label %></span>
+  <div class="sl-check-body">
+    <div class="sl-check-line"><strong class="sl-check-name"><%= name %></strong> <span class="sl-check-summary"><%= result.summary %></span></div>
+    <% lines = result.lines %>
+    <% if lines.one? %>
+      <p class="sl-check-detail"><%= lines.first %></p>
+    <% elsif lines.any? %>
+      <ul class="sl-check-detail"><% lines.each do |line| %><li><%= line %></li><% end %></ul>
+    <% end %>
+    <% if result.link %><%= link_to result.link.first, result.link.last, class: "sl-link" %><% end %>
+  </div>
+</li>

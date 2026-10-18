@@ -1,0 +1,9 @@
+<%# Reloads the page every few seconds when chosen; the choice is a link, so it stays in the URL. %>
+<div class="sl-refresh" role="group" aria-label="Refresh">
+  <span class="sl-refresh-label">Refresh</span>
+  <% [ [ "Off", nil ], *Sightline::HealthController::REFRESH_CHOICES.map { |seconds| [ "#{seconds}s", seconds ] } ].each do |label, seconds| %>
+    <%= link_to label, health_path(refresh: seconds), class: [ "sl-refresh-choice", ("sl-current" if seconds == refresh) ],
+                                                      aria: { current: ("true" if seconds == refresh) } %>
+  <% end %>
+</div>
+<% if refresh %><%= javascript_include_tag "sightline/refresh", defer: true %><% end %>

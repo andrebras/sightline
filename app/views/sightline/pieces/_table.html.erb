@@ -1,0 +1,14 @@
+<div class="sl-panel sl-table-wrap">
+  <% if rows.empty? %>
+    <p class="sl-empty"><%= empty %></p>
+  <% else %>
+    <table class="sl-table">
+      <thead><tr><% headers.each do |header| %><th scope="col"><%= header %></th><% end %></tr></thead>
+      <tbody>
+        <% rows.each do |cells| %>
+          <tr><% cells.each_with_index do |cell, i| %><td data-label="<%= headers[i] %>"><%= cell %></td><% end %></tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
