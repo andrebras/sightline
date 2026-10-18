@@ -88,6 +88,9 @@ Sightline.configure do |c|
   # already links the sections, so each is linked once.
   c.navigation = true
 
+  # A decorative glyph at the right of a page's header, by page title (class sl-icon, hidden from screen readers).
+  c.icons = { "Overview" => "▥", "Health" => "✓", "Jobs" => "⚙" }
+
   # Jobs. The link goes to Mission Control's mount point; jobs_path points it elsewhere.
   c.jobs_path = nil
   # Off by default: Mission Control refuses every request but GET (no retry, discard, pause or run now).

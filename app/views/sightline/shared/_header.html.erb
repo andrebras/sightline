@@ -1,4 +1,5 @@
-<%# The top of every Sightline page: the app's name, the page's title, a line about it and, unless turned off, the navigation. %>
+<%# The top of every Sightline page: the app's name, the page's title, a line about it, the page's icon if the app set
+    one, and, unless turned off, the navigation. %>
 <% content_for :title, title %>
 <%= stylesheet_link_tag "sightline/application" %>
 <header class="sl-header">
@@ -8,6 +9,7 @@
     <% if local_assigns[:intro].present? %><p class="sl-intro"><%= intro %></p><% end %>
   </div>
   <%= local_assigns[:actions] %>
+  <% if (icon = Sightline.config.icons[title]).present? %><span class="sl-icon" aria-hidden="true"><%= icon %></span><% end %>
 </header>
 <% if Sightline.config.navigation %>
 <nav class="sl-nav" aria-label="<%= Sightline.config.title %> sections">
