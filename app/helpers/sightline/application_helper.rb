@@ -1,37 +1,45 @@
 module Sightline
-  # The frame around every Sightline page: its title, the navigation and the stylesheet.
+  # The frame around every Sightline page, Jobs included: its title, the navigation and the stylesheet.
+  # Routes go through the `sightline` proxy, because Jobs' pages are Mission Control's, not the engine's.
   module ApplicationHelper
     NavItem = Data.define(:label, :url, :current)
 
-    # Overview, Health, Jobs (when there is a jobs dashboard), then the app's own pages.
+    # Overview, Health, Jobs (unless turned off), then the app's own pages.
     def sightline_navigation
       items = [
-        NavItem.new("Overview", overview_path, controller_name == "overview"),
-        NavItem.new("Health", health_path, controller_name == "health")
+        NavItem.new("Overview", sightline.overview_path, controller_path == "sightline/overview"),
+        NavItem.new("Health", sightline.health_path, controller_path == "sightline/health")
       ]
-      items << NavItem.new("Jobs", sightline_jobs_url, false) if sightline_jobs_url
-      items + Sightline.config.pages.map do |page|
-        NavItem.new(page.title, app_page_path(page.path), controller_name == "pages" && params[:page] == page.path)
-      end
+      items << sightline_jobs_item if sightline_jobs_url
+      items + sightline_page_items
     end
 
-    # Where the jobs dashboard is: the `jobs_path` setting, or Mission Control – Jobs' mount point if the app has one.
+    # Where the jobs dashboard is: Sightline's own Jobs, or the `jobs_path` setting for one elsewhere.
     def sightline_jobs_url
-      Sightline.config.jobs_path || mission_control_path
+      return Sightline.config.jobs_path if Sightline.config.jobs_path
+
+      sightline.jobs_path if sightline_jobs?
     end
 
-    # Mission Control's list of failed jobs, or the jobs dashboard when it's something else.
+    # The list of failed jobs in Sightline's Jobs, or the jobs dashboard when it's somewhere else.
     def sightline_failed_jobs_url
       return Sightline.config.jobs_path if Sightline.config.jobs_path
-      return unless mission_control_path
+      return unless sightline_jobs?
 
-      MissionControl::Jobs::Engine.routes.url_helpers.jobs_path(:failed, script_name: mission_control_path.chomp("/"))
+      MissionControl::Jobs::Engine.routes.url_helpers.jobs_path(:failed, script_name: sightline.jobs_path.chomp("/"))
     end
 
     private
 
-    def mission_control_path
-      main_app.mission_control_jobs_path if main_app.respond_to?(:mission_control_jobs_path)
+    def sightline_page_items
+      Sightline.config.pages.map do |page|
+        current = controller_path == "sightline/pages" && params[:page] == page.path
+        NavItem.new(page.title, sightline.app_page_path(page.path), current)
+      end
     end
+
+    def sightline_jobs_item = NavItem.new("Jobs", sightline_jobs_url, controller_path.start_with?("mission_control/"))
+
+    def sightline_jobs? = Sightline.config.jobs && sightline.respond_to?(:jobs_path)
   end
 end

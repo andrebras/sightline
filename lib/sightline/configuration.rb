@@ -3,8 +3,11 @@ module Sightline
   # Blocks are stored and called on each page view, never at boot, so they may use the app's reloadable classes.
   class Configuration
     Page = Data.define(:title, :path, :template)
+    NO_ADMIN_CONTROLLER = "Set the app's admin controller: " \
+                          'Sightline.configure { |c| c.base_controller = "Admin::BaseController" }'.freeze
 
-    # The app's controller the engine's controllers inherit from: its sign-in and admin check apply to every page.
+    # The app's controller the engine's controllers, and the jobs dashboard's, inherit from: its sign-in and admin
+    # check apply to every page. Required: without it nothing is served, since the pages would be open to anyone.
     attr_accessor :base_controller
     # The layout pages render in; nil keeps the base controller's own layout.
     attr_accessor :layout
@@ -18,11 +21,15 @@ module Sightline
     # A decorative glyph shown at the right of a page's header, by page title, e.g. { "Health" => "✓" }. Hidden from
     # screen readers. Pages without one show none.
     attr_accessor :icons
-    # The jobs dashboard's path for the navigation; nil finds Mission Control – Jobs' mount point, if any.
+    # Jobs: Mission Control – Jobs at /<mount>/jobs, inside the app's layout. false leaves it out.
+    attr_accessor :jobs
+    # A jobs dashboard somewhere else, for the navigation, instead of Sightline's own (set jobs to false).
     attr_accessor :jobs_path
-    # Whether Mission Control – Jobs may change anything (retry, discard, pause, run now). Off by default:
+    # Whether Jobs may change anything (retry, discard, pause, run now). Off by default:
     # every request other than GET is refused.
     attr_accessor :job_actions
+    # Whether Jobs shows each job's arguments. Off by default: arguments can hold people's email addresses and names.
+    attr_accessor :show_job_arguments
 
     # Health's built-in checks of Solid Queue's processes, failed jobs and recurring tasks.
     # nil (the default) turns them on when the app has Solid Queue.
@@ -40,25 +47,30 @@ module Sightline
     attr_reader :stats, :charts, :notes, :checks, :pages
 
     def initialize
-      @base_controller = "ActionController::Base"
+      @base_controller = nil
       @layout = nil
       @title = "Admin"
       @overview_intro = nil
       @navigation = true
       @icons = {}
+      @jobs = true
       @jobs_path = nil
       @job_actions = false
+      @show_job_arguments = false
       @solid_queue_checks = nil
       @recurring_grace = 2.minutes
       @storage_path = nil
       @storage_warning_below = 20
       @storage_problem_below = 10
       @storage_check = true
-      @stats = []
-      @charts = []
-      @notes = []
-      @checks = []
-      @pages = []
+      clear_declarations
+    end
+
+    # The base controller's class; raises when the app hasn't set one, rather than serve the pages to anyone.
+    def admin_controller
+      raise ArgumentError, NO_ADMIN_CONTROLLER unless base_controller
+
+      base_controller.constantize
     end
 
     def solid_queue_checks?
@@ -99,5 +111,15 @@ module Sightline
     end
 
     def find_page(path) = pages.find { |page| page.path == path.to_s }
+
+    private
+
+    def clear_declarations
+      @stats = []
+      @charts = []
+      @notes = []
+      @checks = []
+      @pages = []
+    end
   end
 end

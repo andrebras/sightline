@@ -1,7 +1,7 @@
 module Sightline
   # Inherits the app's controller (Sightline.config.base_controller), so the app's sign-in and admin check
   # decide who sees these pages. Sightline has no sign-in of its own.
-  class ApplicationController < Sightline.config.base_controller.constantize
+  class ApplicationController < Sightline.config.admin_controller
     layout Sightline.config.layout if Sightline.config.layout
 
     # The app's own route helpers keep working in its before_actions and layout (lib/sightline/app_routes.rb).

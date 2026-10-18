@@ -1,0 +1,4 @@
+<%# Mission Control's raw data, without the job's arguments unless the app shows them (Sightline::Jobs::HiddenArguments). %>
+<h2 class="subtitle">Raw data</h2>
+<% hidden = Sightline.config.show_job_arguments ? %w[backtrace] : %w[backtrace arguments] %>
+<pre><%= JSON.pretty_generate(job.filtered_raw_data.without(*hidden)) %></pre>
