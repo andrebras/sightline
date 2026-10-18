@@ -38,8 +38,8 @@ class HealthTest < Sightline::IntegrationTest
     end
     assert_response :success
     assert_select ".sl-headline.sl-ok", "Everything looks fine"
-    assert_select ".sl-check", 4
-    assert_select ".sl-check.sl-ok", 4
+    assert_select ".sl-check", 5
+    assert_select ".sl-check.sl-ok", 5
     assert_match(/1 of 1 alive/, check("Job processes").text)
     assert_match(/Worker worker-\w+ on web-1: heartbeat less than a minute ago/, check("Job processes").text)
     assert_match(/None/, check("Failed jobs").text)
@@ -100,7 +100,8 @@ class HealthTest < Sightline::IntegrationTest
     process(Time.current)
     get "/admin/health", headers: ADMIN
     names = css_select(".sl-check-name").map(&:text)
-    assert_equal [ "Job processes", "Failed jobs", "Recurring tasks", "Report queue", "Broken", "Wrong" ], names
+    assert_equal [ "Job processes", "Failed jobs", "Recurring tasks", "Disk space", "Report queue", "Broken", "Wrong" ],
+                 names
     assert_includes check("Report queue")["class"], "sl-warning"
     assert_equal [ "Over 2 waiting", "Check the worker" ], check("Report queue").css(".sl-check-detail li").map(&:text)
     assert_match(/The check failed.*RuntimeError: database is locked/m, check("Broken").text)
@@ -114,7 +115,7 @@ class HealthTest < Sightline::IntegrationTest
     with_config(solid_queue_checks: false) do
       get "/admin/health", headers: ADMIN
     end
-    assert_equal [ "Report queue" ], css_select(".sl-check-name").map(&:text)
+    assert_equal [ "Disk space", "Report queue" ], css_select(".sl-check-name").map(&:text)
     assert_select ".sl-table", 0
   end
 
