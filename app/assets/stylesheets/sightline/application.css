@@ -140,6 +140,12 @@
   .sl-table,.sl-table tbody,.sl-table tr,.sl-table td{display:block}
   .sl-table tr{border-bottom:1px solid var(--sl-line);padding:8px 0}
   .sl-table tr:last-child{border-bottom:0}
-  .sl-table td{border:0;padding:3px 16px}
-  .sl-table td::before{content:attr(data-label);display:block;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--sl-label)}
+  .sl-table td{border:0;padding:3px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;text-align:right}
+  .sl-table td::before{content:attr(data-label);flex:none;text-align:left;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--sl-label)}
+  .sl-table td:first-child{display:block;text-align:left}
+  .sl-table td:first-child::before{display:none}
+  /* The chart scales down with the screen; its labels, lines and dots are drawn larger so they stay readable. */
+  .sl-axis{font-size:28px}
+  .sl-line{stroke-width:4}
+  .sl-dot{r:7px;stroke-width:3}
 }
