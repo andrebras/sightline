@@ -9,6 +9,7 @@ require "sightline/system"
 require "sightline/storage"
 require "sightline/health"
 require "sightline/configuration"
+require "sightline/app_routes"
 require "sightline/engine"
 
 # An admin area for a Rails app: Overview, Health and Jobs. See README.md.
