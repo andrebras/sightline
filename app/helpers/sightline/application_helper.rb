@@ -17,8 +17,21 @@ module Sightline
 
     # Where the jobs dashboard is: the `jobs_path` setting, or Mission Control – Jobs' mount point if the app has one.
     def sightline_jobs_url
-      Sightline.config.jobs_path ||
-        (main_app.mission_control_jobs_path if main_app.respond_to?(:mission_control_jobs_path))
+      Sightline.config.jobs_path || mission_control_path
+    end
+
+    # Mission Control's list of failed jobs, or the jobs dashboard when it's something else.
+    def sightline_failed_jobs_url
+      return Sightline.config.jobs_path if Sightline.config.jobs_path
+      return unless mission_control_path
+
+      MissionControl::Jobs::Engine.routes.url_helpers.jobs_path(:failed, script_name: mission_control_path.chomp("/"))
+    end
+
+    private
+
+    def mission_control_path
+      main_app.mission_control_jobs_path if main_app.respond_to?(:mission_control_jobs_path)
     end
   end
 end

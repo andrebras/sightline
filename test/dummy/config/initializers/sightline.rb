@@ -23,5 +23,14 @@ Sightline.configure do |c|
   c.note "Days are UTC."
   c.note { "#{SolidQueue::Job.count} jobs kept." }
 
+  c.check("Report queue") do
+    waiting = SolidQueue::Job.where(class_name: "ReportJob", finished_at: nil).count
+    if waiting > 2
+      Sightline.warning("#{waiting} reports waiting", detail: [ "Over 2 waiting", "Check the worker" ])
+    else
+      Sightline.ok("#{waiting} waiting")
+    end
+  end
+
   c.page "Reports", path: "reports", template: "admin_pages/reports"
 end

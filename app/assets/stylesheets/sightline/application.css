@@ -88,7 +88,40 @@
 .sl-table td{padding:10px 16px;border-bottom:1px solid var(--sl-line);vertical-align:top;overflow-wrap:anywhere}
 .sl-table tr:last-child td{border-bottom:0}
 
+/* Health: the headline, then a line per check with its status. */
+.sl-headline{display:flex;align-items:center;gap:10px;margin:0 0 24px;padding:14px 18px;border-radius:var(--sl-radius);font-weight:600;background:var(--sl-ok-soft);color:var(--sl-ok)}
+.sl-headline::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor;flex:none}
+.sl-headline.sl-warning{background:var(--sl-warning-soft);color:var(--sl-warning)}
+.sl-headline.sl-problem{background:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-checks{list-style:none;margin:0;padding:0;background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius)}
+.sl-check{display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid var(--sl-line)}
+.sl-check:last-child{border-bottom:0}
+.sl-badge{flex:none;width:72px;text-align:center;font-size:10px;letter-spacing:1px;font-weight:700;text-transform:uppercase;border-radius:20px;padding:3px 0;margin-top:2px;background:var(--sl-ok-soft);color:var(--sl-ok)}
+.sl-check.sl-warning .sl-badge{background:var(--sl-warning-soft);color:var(--sl-warning)}
+.sl-check.sl-problem .sl-badge{background:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-check-body{min-width:0;flex:1}
+.sl-check-name{font-weight:600}
+.sl-check-summary{color:var(--sl-ink)}
+.sl-check.sl-warning .sl-check-summary{color:var(--sl-warning)}
+.sl-check.sl-problem .sl-check-summary{color:var(--sl-problem)}
+.sl-check-detail{margin:4px 0 0;padding:0;list-style:none;font-size:12px;color:var(--sl-muted);overflow-wrap:anywhere}
+.sl-check-detail li+li{margin-top:2px}
+.sl-check .sl-link{display:inline-block;margin-top:6px}
+.sl-state{font-size:12px;font-weight:600}
+.sl-state.sl-ok{color:var(--sl-ok)}
+.sl-state.sl-problem{color:var(--sl-problem)}
+.sl-state.sl-muted,.sl-muted{color:var(--sl-muted)}
+.sl-table small.sl-muted{display:block;font-size:11px}
+
+/* The refresh picker in Health's header. */
+.sl-refresh{display:flex;align-items:center;gap:2px;font-size:12px;border:1px solid var(--sl-line);border-radius:8px;padding:3px;background:var(--sl-surface)}
+.sl-refresh-label{color:var(--sl-label);font-weight:600;padding:0 8px}
+.sl-refresh-choice{padding:4px 10px;border-radius:6px;color:var(--sl-muted);text-decoration:none}
+.sl-refresh-choice:hover{color:var(--sl-ink)}
+.sl-refresh-choice.sl-current{background:var(--sl-accent);color:var(--sl-surface);font-weight:600}
+
 @media(max-width:700px){
+  .sl-check{padding:12px 14px;gap:10px;flex-direction:column}
   .sl-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .sl-stat{padding:14px 16px}
   .sl-stat-value{font-size:28px}
