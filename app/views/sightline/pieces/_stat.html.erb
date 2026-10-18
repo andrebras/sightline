@@ -1,0 +1,5 @@
+<div class="sl-stat<%= " sl-#{status}" if status %>">
+  <span class="sl-stat-label"><%= label %></span>
+  <strong class="sl-stat-value"><%= value %></strong>
+  <% if note.present? %><small class="sl-stat-note"><%= note %></small><% end %>
+</div>

@@ -37,3 +37,68 @@
 .sl-nav-link{padding:10px 16px;font-size:13px;color:var(--sl-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;text-decoration:none}
 .sl-nav-link:hover{color:var(--sl-ink)}
 .sl-nav-link.sl-current{border-bottom-color:var(--sl-accent);color:var(--sl-accent);font-weight:600}
+
+/* Sections and panels. */
+.sl-section{margin:0 0 32px}
+.sl-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 12px}
+.sl-section-heading h2{font-size:16px;margin:0}
+.sl-link{font-size:12px;font-weight:600;color:var(--sl-accent)}
+.sl-panel{background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius);padding:20px 24px}
+.sl-empty{color:var(--sl-muted);margin:0}
+.sl-fine-print{font-size:11px;color:var(--sl-muted);margin:20px 0}
+
+/* Stat cards: a row of numbers, two per line on a phone. */
+.sl-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 32px}
+.sl-stat{display:flex;flex-direction:column;gap:2px;background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius);padding:16px 20px;min-width:0}
+.sl-stat-label{font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--sl-label);text-transform:uppercase}
+.sl-stat-value{font-family:var(--sl-font-heading);font-weight:400;font-size:32px;line-height:1.2}
+.sl-stat-note{font-size:11px;color:var(--sl-muted)}
+.sl-stat.sl-warning .sl-stat-value,.sl-stat.sl-warning .sl-stat-note{color:var(--sl-warning)}
+.sl-stat.sl-problem .sl-stat-value,.sl-stat.sl-problem .sl-stat-note{color:var(--sl-problem)}
+
+/* Trend chart. */
+.sl-legend{list-style:none;display:flex;flex-wrap:wrap;gap:8px 24px;padding:0;margin:0 0 12px;font-size:13px}
+.sl-legend li{display:flex;align-items:center;gap:8px}
+.sl-legend strong{font-weight:600}
+.sl-key{width:14px;height:4px;border-radius:2px;background:var(--sl-colour)}
+.sl-chart{width:100%;height:auto;display:block}
+.sl-grid{stroke:var(--sl-line);stroke-width:1}
+.sl-axis{font-size:12px;fill:var(--sl-muted)}
+.sl-line{fill:none;stroke:var(--sl-colour);stroke-width:2;stroke-linejoin:round}
+.sl-dot{fill:var(--sl-colour);stroke:var(--sl-surface);stroke-width:2}
+.sl-series-1{--sl-colour:var(--sl-series-1)}
+.sl-series-2{--sl-colour:var(--sl-series-2)}
+.sl-series-3{--sl-colour:var(--sl-series-3)}
+.sl-series-4{--sl-colour:var(--sl-series-4)}
+.sl-series-5{--sl-colour:var(--sl-series-5)}
+.sl-series-6{--sl-colour:var(--sl-series-6)}
+
+/* Bar chart: a column per day. */
+.sl-bars{list-style:none;display:grid;grid-template-columns:repeat(var(--sl-bar-count,7),minmax(0,1fr));gap:12px;align-items:end;height:200px;margin:0}
+.sl-bars li{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;min-width:0}
+.sl-bars strong{font-size:13px}
+.sl-bar{display:block;width:100%;max-width:44px;min-height:2px;background:var(--sl-accent);border-radius:4px 4px 0 0}
+.sl-bars small{font-size:12px;color:var(--sl-muted);white-space:nowrap}
+
+/* Tables: rows of cells, stacked label above value on a phone. */
+.sl-table-wrap{padding:0;overflow:hidden}
+.sl-table-wrap .sl-empty{padding:16px 20px}
+.sl-table{width:100%;border-collapse:collapse;font-size:13px}
+.sl-table th{text-align:left;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--sl-label);background:var(--sl-surface-alt);padding:10px 16px;border-bottom:1px solid var(--sl-line)}
+.sl-table td{padding:10px 16px;border-bottom:1px solid var(--sl-line);vertical-align:top;overflow-wrap:anywhere}
+.sl-table tr:last-child td{border-bottom:0}
+
+@media(max-width:700px){
+  .sl-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sl-stat{padding:14px 16px}
+  .sl-stat-value{font-size:28px}
+  .sl-panel{padding:16px}
+  .sl-bars{gap:6px;height:170px}
+  .sl-bars small{font-size:10px}
+  .sl-table thead{display:none}
+  .sl-table,.sl-table tbody,.sl-table tr,.sl-table td{display:block}
+  .sl-table tr{border-bottom:1px solid var(--sl-line);padding:8px 0}
+  .sl-table tr:last-child{border-bottom:0}
+  .sl-table td{border:0;padding:3px 16px}
+  .sl-table td::before{content:attr(data-label);display:block;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--sl-label)}
+}

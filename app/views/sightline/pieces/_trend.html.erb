@@ -1,0 +1,32 @@
+<%# A line per series, drawn on the server. Colours come from --sl-series-1 to -6, in the series' order. %>
+<% top = [ series.values.flatten.max || 0, 1 ].max %>
+<% w, h, pad = 1000, 260, 30 %>
+<% x = ->(i) { pad + i * (w - 2 * pad) / [ dates.size - 1, 1 ].max.to_f } %>
+<% y = ->(v) { h - pad - v * (h - 2 * pad) / top.to_f } %>
+<% colour = ->(i) { "sl-series-#{i % 6 + 1}" } %>
+<div class="sl-panel sl-trend">
+  <ul class="sl-legend">
+    <% series.each_with_index do |(name, values), i| %>
+      <li><span class="sl-key <%= colour.(i) %>"></span><%= name %> <strong><%= sl_format(totals.fetch(name) { values.sum }) %></strong></li>
+    <% end %>
+  </ul>
+  <svg viewBox="0 0 <%= w %> <%= h %>" class="sl-chart" role="img" aria-label="<%= label %>">
+    <% [ 0, top ].uniq.each do |v| %>
+      <line x1="<%= pad %>" x2="<%= w - pad %>" y1="<%= y.(v) %>" y2="<%= y.(v) %>" class="sl-grid"/>
+      <text x="<%= pad - 8 %>" y="<%= y.(v) + 4 %>" text-anchor="end" class="sl-axis"><%= v %></text>
+    <% end %>
+    <% [ 0, dates.size / 2, dates.size - 1 ].uniq.each do |i| %>
+      <text x="<%= x.(i) %>" y="<%= h - 8 %>" text-anchor="middle" class="sl-axis"><%= dates[i].strftime("%-d %b") %></text>
+    <% end %>
+    <%# Drawn last-first so the first series, the key one, ends up on top where lines overlap. %>
+    <% series.each_with_index.reverse_each do |(name, values), i| %>
+      <g class="<%= colour.(i) %>">
+        <polyline class="sl-line" points="<%= values.each_with_index.map { |v, j| "#{x.(j).round(1)},#{y.(v).round(1)}" }.join(" ") %>"/>
+        <% values.each_with_index do |v, j| %>
+          <% next if v.zero? %>
+          <circle class="sl-dot" cx="<%= x.(j).round(1) %>" cy="<%= y.(v).round(1) %>" r="4"><title><%= "#{dates[j].strftime("%a %-d %b")} · #{name}: #{v}" %></title></circle>
+        <% end %>
+      </g>
+    <% end %>
+  </svg>
+</div>
