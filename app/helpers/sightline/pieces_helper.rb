@@ -30,6 +30,16 @@ module Sightline
       render "sightline/pieces/bars", values: values, label: label
     end
 
+    # Health check lines: sl_checks { sl_check("Backups", Sightline.ok("Last one 2 hours ago")) }
+    def sl_checks(&)
+      tag.ul(capture(&), class: "sl-checks")
+    end
+
+    # One check's line: its name, status, summary, detail (a string or a list) and link.
+    def sl_check(name, result)
+      render "sightline/pieces/check", name: name, result: result
+    end
+
     # A plain table: headers and rows of cells (strings or HTML).
     def sl_table(headers, rows, empty: "Nothing yet.")
       render "sightline/pieces/table", headers: headers, rows: rows, empty: empty

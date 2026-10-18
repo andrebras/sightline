@@ -15,7 +15,13 @@ module Sightline
     # The jobs dashboard's path for the navigation; nil finds Mission Control – Jobs' mount point, if any.
     attr_accessor :jobs_path
 
-    attr_reader :stats, :charts, :notes, :pages
+    # Health's built-in checks of Solid Queue's processes, failed jobs and recurring tasks.
+    # nil (the default) turns them on when the app has Solid Queue.
+    attr_accessor :solid_queue_checks
+    # How long after its scheduled time a recurring task's run may take to be recorded before it counts as missed.
+    attr_accessor :recurring_grace
+
+    attr_reader :stats, :charts, :notes, :checks, :pages
 
     def initialize
       @base_controller = "ActionController::Base"
@@ -23,10 +29,23 @@ module Sightline
       @title = "Admin"
       @overview_intro = nil
       @jobs_path = nil
+      @solid_queue_checks = nil
+      @recurring_grace = 2.minutes
       @stats = []
       @charts = []
       @notes = []
+      @checks = []
       @pages = []
+    end
+
+    def solid_queue_checks?
+      @solid_queue_checks.nil? ? defined?(SolidQueue::Process).present? : @solid_queue_checks
+    end
+
+    # An app's own health check, shown after the built-in ones. The block returns
+    # Sightline.ok(summary), Sightline.warning(summary, detail: ...) or Sightline.problem(...).
+    def check(name, &block)
+      @checks << Check.new(name: name, block: block)
     end
 
     # A number on the Overview: c.stat("Players") { User.count }

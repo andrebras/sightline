@@ -1,5 +1,11 @@
+require "active_support"
+require "active_support/core_ext"
+require "action_view"
 require "sightline/version"
 require "sightline/overview"
+require "sightline/result"
+require "sightline/solid_queue_checks"
+require "sightline/health"
 require "sightline/configuration"
 require "sightline/engine"
 
