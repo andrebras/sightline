@@ -1,0 +1,20 @@
+# The admin area at <%= mount_path %> (Sightline): Overview, Health and Jobs. See Sightline's README for every setting.
+Sightline.configure do |c|
+  # The app's controller every page inherits from: its sign-in and admin check decide who sees the admin area.
+  c.base_controller = "<%= options[:base_controller] %>"
+  c.title = "<%= app_title %>"
+  # Retry, discard and run now in Jobs; off, Jobs is look-only.
+  c.job_actions = false
+
+  # Numbers and charts on the Overview, e.g.:
+  # c.stat("Users") { User.count }
+  # c.trend("Last 30 days", days: 30) do |dates|
+  #   { "Sign-ups" => User.where(created_at: dates.first.beginning_of_day..).group("date(created_at)").count }
+  # end
+
+  # The app's own checks on Health, e.g.:
+  # c.check("Email outbox") do
+  #   waiting = Delivery.unsent.count
+  #   waiting.zero? ? Sightline.ok("Nothing waiting") : Sightline.warning("#{waiting} waiting")
+  # end
+end
