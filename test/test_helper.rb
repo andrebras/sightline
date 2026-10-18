@@ -4,6 +4,10 @@ FileUtils.mkdir_p(File.expand_path("dummy/tmp", __dir__))
 require_relative "dummy/config/environment"
 require "rails/test_help"
 
+# Routes are drawn on the first request, and Jobs is mounted only if the configuration says so. They're drawn here,
+# before any test changes the configuration.
+Rails.application.reload_routes_unless_loaded
+
 # Solid Queue's own tables, from the schema its installer writes, created afresh for each run.
 ActiveRecord::Schema.verbose = false
 load File.join(Gem.loaded_specs["solid_queue"].full_gem_path,
