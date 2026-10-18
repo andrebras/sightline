@@ -5,13 +5,13 @@ An admin area for a Rails app, as a mountable engine, in three sections:
 - **Overview:** the numbers the app declares: stat cards, daily trend lines and bars per day, drawn on the server.
 - **Health:** whether things are working: Solid Queue's processes, failed jobs and recurring tasks, free disk space,
   the app's own checks, and cards for the system and storage. A refresh picker reloads it every 5, 15 or 30 seconds.
-- **Jobs:** a link to [Mission Control – Jobs](https://github.com/rails/mission_control-jobs) when the app mounts it.
-  Sightline doesn't replace it; it can keep it read-only.
+- **Jobs:** [Mission Control – Jobs](https://github.com/rails/mission_control-jobs), mounted and set up by Sightline:
+  inside the app's layout, behind the same admin check, job arguments hidden, look-only unless the app allows actions.
 
 Sightline has no sign-in and no layout of its own. Its controllers inherit a controller of the app, so the app's
 authentication and admin check decide who sees it, and its pages render inside the app's layout. Everything is
-declared in one initializer. It needs Rails 8 and Ruby 3.4, adds no gems, and uses no JavaScript beyond a few lines
-for the refresh picker.
+declared in one initializer. It needs Rails 8, Ruby 3.4 and Solid Queue, and brings Mission Control – Jobs with it.
+Overview and Health use no JavaScript beyond a few lines for the refresh picker; Jobs uses Mission Control's.
 
 ## Install
 
@@ -20,15 +20,17 @@ for the refresh picker.
 gem "sightline", path: "gems/sightline"
 ```
 
-```ruby
-# config/routes.rb: mount it last, so the app's own /admin routes keep their paths
-# (Sightline only answers its own paths; anything else falls through to the app).
-mount MissionControl::Jobs::Engine, at: "/admin/jobs" # if the app has it
-mount Sightline::Engine, at: "/admin"
+```sh
+bin/rails generate sightline:install --base-controller=Admin::BaseController --mount-at=/admin
 ```
 
-Overview is then `/admin` and Health `/admin/health`. From the app, link to them with `sightline.overview_path` and
-`sightline.health_path`.
+The generator writes `config/initializers/sightline.rb`, adds the mount to `config/routes.rb`, and gives development
+and test their own Solid Queue database, as production has, so Health and Jobs show real jobs locally. It changes
+`config/database.yml` only when it has the plain SQLite shape `rails new` writes; otherwise it says what to add. Mount
+Sightline after the app's own `/admin` routes, so they keep their paths: Sightline answers only its own paths.
+
+Overview is then `/admin`, Health `/admin/health` and Jobs `/admin/jobs`. From the app, link to them with
+`sightline.overview_path`, `sightline.health_path` and `sightline.jobs_path`. Don't mount Mission Control yourself.
 
 ## Configure
 
@@ -37,8 +39,8 @@ the app's models and service objects.
 
 ```ruby
 Sightline.configure do |c|
-  # The app's controller Sightline's controllers inherit (default "ActionController::Base"). Its before_actions,
-  # such as signing in and an admin check that answers 404, apply to every page.
+  # Required: the app's controller Sightline's controllers, and Jobs', inherit. Its before_actions, such as signing in
+  # and an admin check that answers 404, apply to every page. Without it Sightline raises rather than serve anyone.
   c.base_controller = "Admin::BaseController"
   # The layout pages render in; nil (the default) keeps the base controller's own.
   c.layout = nil
@@ -91,10 +93,13 @@ Sightline.configure do |c|
   # A decorative glyph at the right of a page's header, by page title (class sl-icon, hidden from screen readers).
   c.icons = { "Overview" => "▥", "Health" => "✓", "Jobs" => "⚙" }
 
-  # Jobs. The link goes to Mission Control's mount point; jobs_path points it elsewhere.
+  # Jobs, at /<mount>/jobs. false leaves it out; jobs_path links a jobs dashboard somewhere else instead.
+  c.jobs = true
   c.jobs_path = nil
-  # Off by default: Mission Control refuses every request but GET (no retry, discard, pause or run now).
+  # Off by default: Jobs refuses every request but GET (no retry, discard, pause or run now).
   c.job_actions = false
+  # Off by default: job arguments can hold people's email addresses and names.
+  c.show_job_arguments = false
 
   # Health's built-in checks. nil turns the Solid Queue ones on when the app has Solid Queue.
   c.solid_queue_checks = nil
@@ -136,14 +141,25 @@ to the page's name.
 
 The refresh picker keeps its choice in the URL (`/admin/health?refresh=15`).
 
-## Job actions
+## Jobs
 
-Mission Control – Jobs can retry, discard, dispatch, pause and resume queues, and run recurring tasks now. Unless
-`c.job_actions = true`, Sightline adds a check to Mission Control's controllers that refuses any request other than
-GET or HEAD with 403 "Job actions are turned off." It runs after the base controller's own checks, so visitors who
-aren't admins still get what the app gives them (a 404, a sign-in page). Mission Control's buttons still show;
-pressing one does nothing. Mission Control's own settings (`base_controller_class`, hiding arguments, its layout) stay
-the app's.
+Jobs is Mission Control – Jobs, which Sightline mounts at `/<mount>/jobs` and sets up (`lib/sightline/jobs.rb`):
+
+- **Access:** Mission Control's controllers inherit `c.base_controller`, like Sightline's, and its password prompt is
+  off. Solid Queue is its queue.
+- **Layout:** its pages render inside the app's layout (`c.layout`, else `application`), under Sightline's header
+  and navigation, without Mission Control's Bulma stylesheet, whose global classes would restyle the app;
+  `sightline/jobs.css` styles its screens with the same `--sl-*` properties. Its scripts go in the head, so the app's
+  layout should `yield :head`. The app's own route helpers work in that layout, as on Sightline's pages.
+- **Job arguments:** hidden in every list and on a job's page unless `c.show_job_arguments = true`.
+- **One server:** Mission Control's `server_id` is left out of links when the app has one job server.
+- **Actions:** Mission Control can retry, discard, dispatch, pause and resume queues, and run recurring tasks now.
+  Unless `c.job_actions = true`, any request other than GET or HEAD gets 403 "Job actions are turned off." The check
+  runs after the base controller's own, so visitors who aren't admins still get what the app gives them. Mission
+  Control's buttons still show; pressing one does nothing.
+
+When upgrading Mission Control, compare its layout with `lib/sightline/jobs_views/layouts/mission_control/jobs/
+application.html.erb` and look over its screens.
 
 ## Pieces
 
@@ -188,4 +204,5 @@ cd gems/sightline && bin/test
 ```
 
 The tests run against a dummy app (`test/dummy`) with Solid Queue's tables, created from Solid Queue's own schema,
-and Mission Control – Jobs, using real records. The engine has its own `Gemfile`.
+using real records; Jobs is Sightline's own, as in any app. The engine has its own `Gemfile` and lint config
+(`bundle exec rubocop`).
