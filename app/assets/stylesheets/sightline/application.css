@@ -1,0 +1,39 @@
+/* Sightline's pages. Every class starts with sl-, and everything sits inside .sl.
+   Colours and fonts are custom properties with neutral defaults; an app sets its own on .sl, e.g.
+   .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}. The defaults use :where() so any .sl rule wins. */
+:where(.sl){
+  --sl-ink:#1f2328;
+  --sl-muted:#636c76;
+  --sl-label:#57606a;
+  --sl-accent:#0969da;
+  --sl-surface:#fff;
+  --sl-surface-alt:#f6f8fa;
+  --sl-line:#d8dee4;
+  --sl-ok:#1a7f37;
+  --sl-ok-soft:#e6f4ea;
+  --sl-warning:#9a6700;
+  --sl-warning-soft:#fff8c5;
+  --sl-problem:#cf222e;
+  --sl-problem-soft:#ffebe9;
+  --sl-radius:12px;
+  --sl-font:inherit;
+  --sl-font-heading:inherit;
+  --sl-series-1:#0969da;
+  --sl-series-2:#cf222e;
+  --sl-series-3:#1a7f37;
+  --sl-series-4:#9a6700;
+  --sl-series-5:#8250df;
+  --sl-series-6:#57606a;
+}
+.sl{color:var(--sl-ink);font-family:var(--sl-font)}
+.sl *,.sl *::before,.sl *::after{box-sizing:border-box}
+
+/* Header and navigation. */
+.sl-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-bottom:20px}
+.sl-eyebrow{display:block;font-size:10px;letter-spacing:2px;font-weight:700;color:var(--sl-label);text-transform:uppercase;margin-bottom:10px}
+.sl-title{font-family:var(--sl-font-heading);margin:0 0 6px}
+.sl-intro{margin:0;color:var(--sl-muted)}
+.sl-nav{display:flex;gap:4px;border-bottom:1px solid var(--sl-line);margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
+.sl-nav-link{padding:10px 16px;font-size:13px;color:var(--sl-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;text-decoration:none}
+.sl-nav-link:hover{color:var(--sl-ink)}
+.sl-nav-link.sl-current{border-bottom-color:var(--sl-accent);color:var(--sl-accent);font-weight:600}
