@@ -113,6 +113,14 @@
 .sl-state.sl-muted,.sl-muted{color:var(--sl-muted)}
 .sl-table small.sl-muted{display:block;font-size:11px}
 
+/* Cards of facts, side by side: System and Storage. */
+.sl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:0 0 32px}
+.sl-card h2{font-size:16px;margin:0 0 12px}
+.sl-facts{margin:0;font-size:13px}
+.sl-facts div{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-top:1px solid var(--sl-line)}
+.sl-facts dt{color:var(--sl-muted)}
+.sl-facts dd{margin:0;text-align:right;font-weight:600;overflow-wrap:anywhere;min-width:0}
+
 /* The refresh picker in Health's header. */
 .sl-refresh{display:flex;align-items:center;gap:2px;font-size:12px;border:1px solid var(--sl-line);border-radius:8px;padding:3px;background:var(--sl-surface)}
 .sl-refresh-label{color:var(--sl-label);font-weight:600;padding:0 8px}

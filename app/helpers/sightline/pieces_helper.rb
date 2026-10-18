@@ -40,6 +40,11 @@ module Sightline
       render "sightline/pieces/check", name: name, result: result
     end
 
+    # A card of labelled facts: sl_card("System", [ [ "Ruby", "3.4.8" ], [ "Booted", "2 hours ago" ] ])
+    def sl_card(title, facts, id: nil)
+      render "sightline/pieces/card", title: title, facts: facts, id: id
+    end
+
     # A plain table: headers and rows of cells (strings or HTML).
     def sl_table(headers, rows, empty: "Nothing yet.")
       render "sightline/pieces/table", headers: headers, rows: rows, empty: empty

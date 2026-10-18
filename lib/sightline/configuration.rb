@@ -21,6 +21,13 @@ module Sightline
     # How long after its scheduled time a recurring task's run may take to be recorded before it counts as missed.
     attr_accessor :recurring_grace
 
+    # The directory whose volume's free space Health checks; nil uses the directory of the first SQLite database.
+    attr_accessor :storage_path
+    # Free space, in percent of the volume, below which Health shows a warning and then a problem.
+    attr_accessor :storage_warning_below, :storage_problem_below
+    # false leaves the Storage card and the disk space check out, e.g. for an app without local databases.
+    attr_accessor :storage_check
+
     attr_reader :stats, :charts, :notes, :checks, :pages
 
     def initialize
@@ -31,6 +38,10 @@ module Sightline
       @jobs_path = nil
       @solid_queue_checks = nil
       @recurring_grace = 2.minutes
+      @storage_path = nil
+      @storage_warning_below = 20
+      @storage_problem_below = 10
+      @storage_check = true
       @stats = []
       @charts = []
       @notes = []

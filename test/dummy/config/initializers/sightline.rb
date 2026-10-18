@@ -3,6 +3,9 @@ Sightline.configure do |c|
   c.base_controller = "AdminController"
   c.title = "Dummy"
   c.overview_intro = "How the dummy app is doing."
+  # Whatever the free space where the tests run, the disk check passes unless a test raises these.
+  c.storage_warning_below = 0
+  c.storage_problem_below = 0
 
   c.stat("Jobs", note: "all time") { SolidQueue::Job.count }
   c.stat("Finished", note: -> { "#{SolidQueue::Job.finished.count} of #{SolidQueue::Job.count}" }, format: :percent) do

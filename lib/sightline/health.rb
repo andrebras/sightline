@@ -1,5 +1,6 @@
 module Sightline
-  # Everything Health shows, worked out once per page view: the built-in Solid Queue checks, then the app's own.
+  # Everything Health shows, worked out once per page view: the built-in Solid Queue checks, disk space,
+  # then the app's own checks; and the System and Storage cards.
   class Health
     attr_reader :config, :now
 
@@ -15,9 +16,19 @@ module Sightline
       @solid_queue ||= SolidQueueChecks.new(now: now, grace: config.recurring_grace, failed_jobs_url: @failed_jobs_url)
     end
 
+    def storage
+      return unless config.storage_check
+
+      @storage ||= Storage.from_app(config)
+    end
+
+    def system = @system ||= System.new
+
     # [[name, Result], ...] in the order they're shown.
     def results
-      @results ||= Array(solid_queue&.results) + config.checks.map { |check| [ check.name, check.run ] }
+      @results ||= Array(solid_queue&.results) +
+                   (storage ? [ [ "Disk space", storage.result ] ] : []) +
+                   config.checks.map { |check| [ check.name, check.run ] }
     end
 
     def needing_a_look = results.count { |_name, result| !result.ok? }

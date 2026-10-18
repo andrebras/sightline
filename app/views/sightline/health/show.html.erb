@@ -13,6 +13,25 @@
     <% end %>
   <% end %>
 
+  <div class="sl-cards">
+    <% system = @health.system %>
+    <%= sl_card "System", [
+          [ "Ruby", system.ruby ],
+          [ "Rails", system.rails ],
+          [ "Booted", system.booted_at ? "#{time_ago_in_words(system.booted_at)} ago" : "–" ],
+          [ "Memory", system.memory ? number_to_human_size(system.memory) : "Unknown" ],
+          [ "Running on", system.running_on ]
+        ], id: "sl-system" %>
+    <% if (storage = @health.storage) %>
+      <% space = storage.space %>
+      <%= sl_card "Storage", [
+            [ "Free", space ? "#{number_to_human_size(space.available)} of #{number_to_human_size(space.total)}" : "Unknown" ],
+            [ "Volume", storage.path ],
+            *storage.database_files.map { |file| [ file.name, number_to_human_size(file.size) ] }
+          ], id: "sl-storage" %>
+    <% end %>
+  </div>
+
   <% if @health.solid_queue %>
     <% tasks = @health.solid_queue.tasks_with_runs %>
     <%= sl_section "Recurring tasks", link: ([ "Open Jobs", sightline_jobs_url ] if sightline_jobs_url) do %>
