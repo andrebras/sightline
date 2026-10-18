@@ -15,8 +15,10 @@
       <line x1="<%= pad %>" x2="<%= w - pad %>" y1="<%= y.(v) %>" y2="<%= y.(v) %>" class="sl-grid"/>
       <text x="<%= pad - 8 %>" y="<%= y.(v) + 4 %>" text-anchor="end" class="sl-axis"><%= v %></text>
     <% end %>
+    <%# The first and last dates line up with the chart's edges, so they aren't cut off on a narrow screen. %>
     <% [ 0, dates.size / 2, dates.size - 1 ].uniq.each do |i| %>
-      <text x="<%= x.(i) %>" y="<%= h - 8 %>" text-anchor="middle" class="sl-axis"><%= dates[i].strftime("%-d %b") %></text>
+      <% anchor = { 0 => "start", dates.size - 1 => "end" }.fetch(i, "middle") %>
+      <text x="<%= x.(i) %>" y="<%= h - 8 %>" text-anchor="<%= anchor %>" class="sl-axis"><%= dates[i].strftime("%-d %b") %></text>
     <% end %>
     <%# Drawn last-first so the first series, the key one, ends up on top where lines overlap. %>
     <% series.each_with_index.reverse_each do |(name, values), i| %>

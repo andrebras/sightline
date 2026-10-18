@@ -88,8 +88,8 @@ module Sightline
 
     def state(task, due, last_run)
       return :unknown unless due
-      return :not_due if due < task.created_at
       return :ok if last_run && last_run >= due - 1.second
+      return :not_due if due < task.created_at
       # Runs are recorded with their job, which Solid Queue clears once finished (clear_finished_jobs_after):
       # a missing record for a run older than that says nothing.
       return :not_kept if due < @now - SolidQueue.clear_finished_jobs_after
