@@ -12,6 +12,9 @@ module Sightline
     attr_accessor :title
     # A line under the Overview's title.
     attr_accessor :overview_intro
+    # Whether each page shows Sightline's section links (Overview, Health, Jobs and the app's pages). An app whose own
+    # layout already links them turns this off, so each section is linked once.
+    attr_accessor :navigation
     # The jobs dashboard's path for the navigation; nil finds Mission Control – Jobs' mount point, if any.
     attr_accessor :jobs_path
     # Whether Mission Control – Jobs may change anything (retry, discard, pause, run now). Off by default:
@@ -38,6 +41,7 @@ module Sightline
       @layout = nil
       @title = "Admin"
       @overview_intro = nil
+      @navigation = true
       @jobs_path = nil
       @job_actions = false
       @solid_queue_checks = nil
