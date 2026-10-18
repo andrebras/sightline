@@ -1,5 +1,4 @@
-# Sightline's own lint config, for when it lives in its own repo: the same rules as the app it grew up in (Plymico's
-# .rubocop.yml), with paths relative to the gem. Inside Plymico, bin/rubocop uses Plymico's config instead.
+# Sightline's lint config: the same rules as Plymico, the app it grew up in.
 plugins:
   - rubocop-minitest
   - rubocop-performance
