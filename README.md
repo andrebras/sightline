@@ -16,8 +16,8 @@ Overview and Health use no JavaScript beyond a few lines for the refresh picker;
 ## Install
 
 ```ruby
-# Gemfile
-gem "sightline", path: "gems/sightline"
+# Gemfile: installed from GitHub, pinned to a release tag
+gem "sightline", github: "andrebras/sightline", tag: "v0.1.0"
 ```
 
 ```sh
@@ -200,7 +200,7 @@ The stylesheet is linked from each page, so the app's layout needs nothing added
 ## Tests
 
 ```sh
-cd gems/sightline && bin/test
+bin/test
 ```
 
 The tests run against a dummy app (`test/dummy`) with Solid Queue's tables, created from Solid Queue's own schema,
