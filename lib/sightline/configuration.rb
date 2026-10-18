@@ -15,6 +15,9 @@ module Sightline
     # Whether each page shows Sightline's section links (Overview, Health, Jobs and the app's pages). An app whose own
     # layout already links them turns this off, so each section is linked once.
     attr_accessor :navigation
+    # A decorative glyph shown at the right of a page's header, by page title, e.g. { "Health" => "✓" }. Hidden from
+    # screen readers. Pages without one show none.
+    attr_accessor :icons
     # The jobs dashboard's path for the navigation; nil finds Mission Control – Jobs' mount point, if any.
     attr_accessor :jobs_path
     # Whether Mission Control – Jobs may change anything (retry, discard, pause, run now). Off by default:
@@ -42,6 +45,7 @@ module Sightline
       @title = "Admin"
       @overview_intro = nil
       @navigation = true
+      @icons = {}
       @jobs_path = nil
       @job_actions = false
       @solid_queue_checks = nil

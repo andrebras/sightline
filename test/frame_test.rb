@@ -43,6 +43,15 @@ class FrameTest < Sightline::IntegrationTest
     end
   end
 
+  test "a page shows the icon the app set for it, and pages without one show none" do
+    with_config(icons: { "Health" => "✓" }) do
+      get "/admin/health", headers: ADMIN
+      assert_select ".sl-header .sl-icon[aria-hidden='true']", "✓"
+      get "/admin", headers: ADMIN
+      assert_select ".sl-icon", 0
+    end
+  end
+
   test "the jobs link can point elsewhere" do
     with_config(jobs_path: "/ops/jobs") do
       get "/admin", headers: ADMIN

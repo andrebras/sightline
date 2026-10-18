@@ -30,6 +30,9 @@
 
 /* Header and navigation. */
 .sl-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-bottom:20px}
+/* The title block takes the free space, so the page's actions and icon sit together on the right. */
+.sl-header>div:first-child{flex:1 1 auto}
+.sl-icon{font-size:56px;line-height:1;color:var(--sl-line);align-self:center}
 .sl-eyebrow{display:block;font-size:10px;letter-spacing:2px;font-weight:700;color:var(--sl-label);text-transform:uppercase;margin-bottom:10px}
 .sl-title{font-family:var(--sl-font-heading);margin:0 0 6px}
 .sl-intro{margin:0;color:var(--sl-muted)}
