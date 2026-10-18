@@ -3,6 +3,10 @@ module Sightline
   # decide who sees these pages. Sightline has no sign-in of its own.
   class ApplicationController < Sightline.config.base_controller.constantize
     layout Sightline.config.layout if Sightline.config.layout
-    helper Sightline::AppRoutesHelper, Sightline::PiecesHelper, Sightline::ApplicationHelper
+
+    # The app's own route helpers keep working in its before_actions and layout (lib/sightline/app_routes.rb).
+    include Sightline::AppRoutes
+
+    helper Sightline::AppRoutes, Sightline::PiecesHelper, Sightline::ApplicationHelper
   end
 end

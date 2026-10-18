@@ -11,7 +11,7 @@ module Sightline
       ]
       items << NavItem.new("Jobs", sightline_jobs_url, false) if sightline_jobs_url
       items + Sightline.config.pages.map do |page|
-        NavItem.new(page.title, page_path(page.path), controller_name == "pages" && params[:page] == page.path)
+        NavItem.new(page.title, app_page_path(page.path), controller_name == "pages" && params[:page] == page.path)
       end
     end
 

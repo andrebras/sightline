@@ -11,6 +11,11 @@ class FrameTest < Sightline::IntegrationTest
     assert_response :success
   end
 
+  test "the app's controller code can use its own route helpers" do
+    get "/admin/health", headers: { "X-Admin" => "none" }
+    assert_redirected_to "/things"
+  end
+
   test "pages render inside the app's layout, whose own links still go to the app" do
     get "/admin/health", headers: ADMIN
     assert_select "title", "Health · Dummy"
