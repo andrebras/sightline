@@ -1,0 +1,93 @@
+/* Jobs: Mission Control – Jobs' screens inside the app's layout, without its Bulma stylesheet
+   (lib/sightline/jobs_views/layouts/mission_control/jobs/application.html.erb). These rules give the Bulma class names
+   its markup uses (level, buttons, field, tag, table, tabs) their layout, in Sightline's colours (--sl-* on .sl,
+   application.css). Everything is scoped to .sl-jobs. Re-check the screens when upgrading Mission Control. */
+
+/* Section links as Plymico's underlined tabs, scrolling sideways on a phone. */
+.sl-jobs .tabs{display:block;border:0;margin:0 0 24px;overflow-x:auto}
+.sl-jobs .tabs ul{display:flex;gap:5px;list-style:none;margin:0;padding:0;border-bottom:1px solid var(--sl-line);min-width:max-content}
+.sl-jobs .tabs a{display:block;padding:11px 15px;font-size:12px;color:var(--sl-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.sl-jobs .tabs a:hover{color:var(--sl-ink)}
+.sl-jobs .tabs li.is-active a{border-bottom-color:var(--sl-accent);color:var(--sl-accent);font-weight:600}
+
+/* Bulma's layout helpers that the gem's markup relies on. */
+.sl-jobs .level{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;margin-bottom:20px}
+.sl-jobs .level-left,.sl-jobs .level-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sl-jobs .is-flex{display:flex}
+.sl-jobs .is-flex-wrap-wrap{flex-wrap:wrap}
+.sl-jobs .is-justify-content-flex-end{justify-content:flex-end}
+.sl-jobs .is-align-self-flex-end{align-self:flex-end}
+.sl-jobs .is-hidden{display:none!important}
+.sl-jobs .has-text-grey{color:var(--sl-muted)}
+.sl-jobs .has-text-danger{color:var(--sl-problem)}
+.sl-jobs .has-text-centered{text-align:center}
+.sl-jobs .is-size-7{font-size:12px}
+.sl-jobs .is-size-3{font-size:20px}
+.sl-jobs .mt-6{margin-top:40px}
+.sl-jobs .mb-4{margin-bottom:16px}
+.sl-jobs .mb-2{margin-bottom:8px}
+.sl-jobs .mt-2{margin-top:8px}
+.sl-jobs .ml-2{margin-left:8px}
+.sl-jobs .ml-4{margin-left:12px}
+.sl-jobs .mr-2{margin-right:8px}
+.sl-jobs .mr-3{margin-right:12px}
+.sl-jobs .mr-5{margin-right:20px}
+.sl-jobs .is-family-monospace,.sl-jobs pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* A job's page: its name and status, then its details. */
+.sl-jobs h1.title{font-family:var(--sl-font-heading);font-weight:500;font-size:26px;letter-spacing:-.6px;margin:0 0 16px}
+.sl-jobs h1.title .level{margin:0}
+.sl-jobs h1.title .buttons,.sl-jobs h1.title .tag{font-family:var(--sl-font);letter-spacing:0}
+.sl-jobs .subtitle{font-size:16px;font-weight:600;margin:28px 0 12px}
+
+/* Tables as white panels with small-caps column labels. */
+.sl-jobs .table{width:100%;background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:12px;border-collapse:separate;border-spacing:0;overflow:hidden;margin-bottom:20px;font-size:13px}
+.sl-jobs .table th,.sl-jobs .table td{text-align:left;border-bottom:1px solid var(--sl-line);padding:12px 16px;vertical-align:middle}
+.sl-jobs .table tr:last-child>td,.sl-jobs .table tbody tr:last-child>th{border-bottom:0}
+.sl-jobs .table thead th{background:var(--sl-surface-alt);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--sl-label);border-bottom:1px solid var(--sl-line)}
+.sl-jobs .table tbody th{font-weight:600;color:var(--sl-ink);white-space:nowrap;width:1%}
+.sl-jobs .table.is-hoverable tbody tr:hover{background:var(--sl-surface-alt)}
+.sl-jobs .table td.pr-0{white-space:nowrap}
+.sl-jobs .table a{color:var(--sl-accent);font-weight:600}
+.sl-jobs .table tr.job td:nth-child(2)>a{color:var(--sl-problem)}
+.sl-jobs table.jobs td{word-break:normal;overflow-wrap:anywhere}
+
+/* Buttons: small, olive outline for retry, run and resume; muted red for discard. */
+.sl-jobs .buttons{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.sl-jobs .buttons.is-right{justify-content:flex-end}
+.sl-jobs .buttons form,.sl-jobs .field form{margin:0}
+.sl-jobs .button,.sl-jobs .pagination-previous,.sl-jobs .pagination-next{display:inline-flex;align-items:center;min-height:0;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--sl-surface);border:1px solid var(--sl-line);color:var(--sl-accent);white-space:nowrap}
+.sl-jobs .button:hover,.sl-jobs .pagination-previous:hover,.sl-jobs .pagination-next:hover{background:var(--sl-surface-alt);color:var(--sl-ink);transform:none}
+.sl-jobs .button.is-danger{background:var(--sl-problem-soft);border-color:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-jobs .button.is-danger:hover{background:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-jobs .button[disabled],.sl-jobs a[disabled]{opacity:.45}
+
+/* Filters. */
+.sl-jobs .field.is-grouped{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 12px}
+.sl-jobs .control{display:flex;flex-direction:column;gap:4px}
+.sl-jobs .label{font-size:11px;font-weight:600;color:var(--sl-ink)}
+.sl-jobs .input{min-height:38px!important;padding:8px 12px!important;font-size:13px}
+.sl-jobs .filter input{width:13rem}
+
+/* Status tags and code. */
+.sl-jobs .tag{display:inline-flex;align-items:center;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;background:var(--sl-surface-alt);color:var(--sl-muted);vertical-align:middle}
+.sl-jobs .tag.is-danger{background:var(--sl-problem-soft);color:var(--sl-problem)}
+.sl-jobs .tag.is-warning{background:var(--sl-warning-soft);color:var(--sl-warning)}
+.sl-jobs .tag.is-primary,.sl-jobs .tag.is-success{background:var(--sl-ok-soft);color:var(--sl-ok)}
+.sl-jobs pre{background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:8px;padding:16px;font-size:12px;color:var(--sl-ink);overflow-x:auto;white-space:pre-wrap}
+.sl-jobs pre:empty{display:none}
+
+@media(max-width:700px){
+  .sl-jobs .level{flex-direction:column;align-items:stretch}
+  .sl-jobs .filter input{width:100%}
+  .sl-jobs .table th,.sl-jobs .table td{padding:10px 12px}
+  /* Job lists stack each row's cells (job, details, actions) instead of squeezing them into columns. */
+  .sl-jobs table.jobs thead{display:none}
+  .sl-jobs table.jobs,.sl-jobs table.jobs tbody,.sl-jobs table.jobs tr,.sl-jobs table.jobs td{display:block;width:auto!important}
+  .sl-jobs table.jobs tr{border-bottom:1px solid var(--sl-line)}
+  .sl-jobs table.jobs tr:last-child{border-bottom:0}
+  .sl-jobs table.jobs td{border:0;padding:4px 14px}
+  .sl-jobs table.jobs td:first-child{padding-top:12px}
+  .sl-jobs table.jobs td:last-child{padding-bottom:12px}
+  .sl-jobs table.jobs td.pr-0 .buttons{justify-content:flex-start}
+}

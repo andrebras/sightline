@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><title><%= content_for(:title) %> · Dummy</title></head>
+<head><title><%= content_for(:title) %> · Dummy</title><%= yield :head %></head>
 <body>
   <nav class="app-nav"><%= link_to "Home", root_path %> <%= link_to "Things", things_path %></nav>
   <%= yield %>

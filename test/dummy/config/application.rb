@@ -8,8 +8,8 @@ require "solid_queue"
 require "mission_control/jobs"
 require "sightline"
 
-# The smallest app Sightline runs in: an admin controller, a layout with its own links, Solid Queue's tables
-# in its one database, and Mission Control – Jobs at /admin/jobs.
+# The smallest app Sightline runs in: an admin controller, a layout with its own links and Solid Queue's tables in
+# its one database. Sightline mounts and sets up Jobs (Mission Control – Jobs) itself.
 module Dummy
   class Application < Rails::Application
     config.load_defaults 8.0
@@ -22,8 +22,5 @@ module Dummy
     config.active_support.deprecation = :raise
     config.active_job.queue_adapter = :test
     config.logger = Logger.new(nil)
-    config.mission_control.jobs.base_controller_class = "AdminController"
-    config.mission_control.jobs.http_basic_auth_enabled = false
-    config.mission_control.jobs.adapters = [ :solid_queue ]
   end
 end
