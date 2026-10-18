@@ -14,6 +14,9 @@ module Sightline
     attr_accessor :overview_intro
     # The jobs dashboard's path for the navigation; nil finds Mission Control – Jobs' mount point, if any.
     attr_accessor :jobs_path
+    # Whether Mission Control – Jobs may change anything (retry, discard, pause, run now). Off by default:
+    # every request other than GET is refused.
+    attr_accessor :job_actions
 
     # Health's built-in checks of Solid Queue's processes, failed jobs and recurring tasks.
     # nil (the default) turns them on when the app has Solid Queue.
@@ -36,6 +39,7 @@ module Sightline
       @title = "Admin"
       @overview_intro = nil
       @jobs_path = nil
+      @job_actions = false
       @solid_queue_checks = nil
       @recurring_grace = 2.minutes
       @storage_path = nil
