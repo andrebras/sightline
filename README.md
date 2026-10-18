@@ -84,6 +84,10 @@ Sightline.configure do |c|
   # The template renders inside Sightline's frame and can use the pieces below.
   c.page "Refunds", path: "refunds", template: "admin/refunds"
 
+  # Section links (Overview, Health, Jobs, the app's pages) on every page. Turn them off when the app's own layout
+  # already links the sections, so each is linked once.
+  c.navigation = true
+
   # Jobs. The link goes to Mission Control's mount point; jobs_path points it elsewhere.
   c.jobs_path = nil
   # Off by default: Mission Control refuses every request but GET (no retry, discard, pause or run now).

@@ -1,4 +1,4 @@
-<%# The top of every Sightline page: the app's name, the page's title, a line about it and the navigation. %>
+<%# The top of every Sightline page: the app's name, the page's title, a line about it and, unless turned off, the navigation. %>
 <% content_for :title, title %>
 <%= stylesheet_link_tag "sightline/application" %>
 <header class="sl-header">
@@ -9,8 +9,10 @@
   </div>
   <%= local_assigns[:actions] %>
 </header>
+<% if Sightline.config.navigation %>
 <nav class="sl-nav" aria-label="<%= Sightline.config.title %> sections">
   <% sightline_navigation.each do |item| %>
     <%= link_to item.label, item.url, class: [ "sl-nav-link", ("sl-current" if item.current) ], aria: { current: ("page" if item.current) } %>
   <% end %>
 </nav>
+<% end %>

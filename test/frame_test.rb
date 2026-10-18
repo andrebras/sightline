@@ -35,6 +35,14 @@ class FrameTest < Sightline::IntegrationTest
     assert_select ".sl-intro", "How the dummy app is doing."
   end
 
+  test "an app whose layout links the sections turns the navigation off" do
+    with_config(navigation: false) do
+      get "/admin", headers: ADMIN
+      assert_select ".sl-nav", 0
+      assert_select ".sl h1", "Overview"
+    end
+  end
+
   test "the jobs link can point elsewhere" do
     with_config(jobs_path: "/ops/jobs") do
       get "/admin", headers: ADMIN
