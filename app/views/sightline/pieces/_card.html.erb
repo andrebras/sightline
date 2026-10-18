@@ -1,0 +1,8 @@
+<%= tag.section class: "sl-panel sl-card", id: id do %>
+  <h2><%= title %></h2>
+  <dl class="sl-facts">
+    <% facts.each do |label, value| %>
+      <div><dt><%= label %></dt><dd><%= value %></dd></div>
+    <% end %>
+  </dl>
+<% end %>

@@ -1,0 +1,33 @@
+<% config = Sightline.config %>
+<div class="sl sl-overview">
+  <%= render "sightline/shared/header", title: "Overview", intro: config.overview_intro %>
+
+  <% if config.stats.any? %>
+    <%= sl_stats do %>
+      <% config.stats.each do |stat| %>
+        <%= sl_stat stat.label, stat.value, note: stat.note_text, format: stat.format %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% config.charts.each do |chart| %>
+    <%= sl_section chart.title do %>
+      <% if chart.is_a?(Sightline::Overview::Trend) %>
+        <% dates = chart.dates %>
+        <% series = chart.series(dates) %>
+        <%= sl_trend dates, series, totals: series.to_h { |name, values| [ name, chart.total(name, values) ] },
+                                    label: "#{chart.title}: #{series.keys.to_sentence} by day" %>
+      <% else %>
+        <%= sl_bars chart.values, label: chart.title %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if config.stats.empty? && config.charts.empty? %>
+    <p class="sl-empty">Nothing declared yet: add stats, trends and bars in Sightline.configure.</p>
+  <% end %>
+
+  <% config.notes.each do |note| %>
+    <p class="sl-fine-print"><%= note %></p>
+  <% end %>
+</div>

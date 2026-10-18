@@ -1,0 +1,22 @@
+<%# Jobs inside the app's own layout (Sightline.config.layout, else "application"), with Sightline's header like
+    Overview and Health. Replaces Mission Control's layout (mission_control-jobs 1.3): its Bulma stylesheet is left out,
+    because Bulma's global classes (.content, .section, .button) would restyle the app's layout; sightline/jobs.css
+    styles its screens instead, and its application and server picker is left out. Its scripts go in the head, so the
+    app's layout should `yield :head`. The page is wrapped by replacing what `yield` returns in the app's layout.
+    Compare with Mission Control's own layout when upgrading it. %>
+<% content_for :head do %>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="turbo-cache-control" content="no-cache">
+  <meta name="turbo-prefetch" content="false">
+  <%= javascript_importmap_tags "application", importmap: MissionControl::Jobs.importmap %>
+<% end %>
+<% content_for :layout, flush: true do %>
+  <div class="sl sl-jobs">
+    <%= stylesheet_link_tag "mission_control/jobs/forms", "mission_control/jobs/jobs", "sightline/jobs" %>
+    <%= render "sightline/shared/header", title: "Jobs",
+                                          intro: "Queues, failed, scheduled and finished jobs, workers and recurring tasks." %>
+    <%= render "layouts/mission_control/jobs/navigation" %>
+    <%= yield %>
+  </div>
+<% end %>
+<%= render template: "layouts/#{Sightline.config.layout || "application"}" %>

@@ -67,3 +67,7 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 /public/uploads
+
+# The engine's dummy app
+/test/dummy/tmp/
+/test/dummy/log/
