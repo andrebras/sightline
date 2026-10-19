@@ -32,7 +32,7 @@ module Sightline
     attr_accessor :show_job_arguments
 
     # Health's built-in checks of Solid Queue's processes, failed jobs and recurring tasks.
-    # nil (the default) turns them on when the app has Solid Queue.
+    # nil (the default) turns them on when the app has Solid Queue and it is Active Job's adapter in this environment.
     attr_accessor :solid_queue_checks
     # How long after its scheduled time a recurring task's run may take to be recorded before it counts as missed.
     attr_accessor :recurring_grace
@@ -74,7 +74,9 @@ module Sightline
     end
 
     def solid_queue_checks?
-      @solid_queue_checks.nil? ? defined?(SolidQueue::Process).present? : @solid_queue_checks
+      return @solid_queue_checks unless @solid_queue_checks.nil?
+
+      defined?(SolidQueue::Process).present? && ActiveJob::Base.queue_adapter_name == "solid_queue"
     end
 
     # An app's own health check, shown after the built-in ones. The block returns

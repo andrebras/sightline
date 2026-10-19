@@ -71,7 +71,8 @@ and test their own Solid Queue database, as production has, so Health and Jobs s
 ```
 
 **5. Open `/admin`.** With only the admin controller set you already get:
-- **Health**, with every built-in check: job processes, failed jobs, recurring tasks, disk space;
+- **Health**, with every built-in check: disk space, and where Solid Queue is your job adapter, job processes,
+  failed jobs and recurring tasks;
 - **Jobs**;
 - an empty **Overview**, waiting for your numbers.
 
@@ -177,7 +178,7 @@ The page is listed after Overview, Health and Jobs, at `/admin/refunds`. Its tem
 | `jobs_path` | `nil` | Link a jobs dashboard elsewhere instead (with `jobs = false`). |
 | `job_actions` | `false` | Allow anything but GET in Jobs. |
 | `show_job_arguments` | `false` | Show jobs' arguments. |
-| `solid_queue_checks` | `nil` | Health's Solid Queue checks; `nil` means on when the app has Solid Queue. |
+| `solid_queue_checks` | `nil` | Health's Solid Queue checks; `nil` means on when the app has Solid Queue and it is Active Job's adapter in that environment, so they are off where jobs run on `:async` or `:test`. |
 | `recurring_grace` | `2.minutes` | How late a recurring run may be recorded before it counts as missed. |
 | `storage_path` | `nil` | The directory whose volume Health checks; `nil` means the first SQLite database's. |
 | `storage_warning_below` / `storage_problem_below` | `20` / `10` | Free space, in percent, for a warning and a problem. |

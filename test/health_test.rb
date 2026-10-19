@@ -119,6 +119,17 @@ class HealthTest < Sightline::IntegrationTest
     assert_select ".sl-table", 0
   end
 
+  test "the built-in checks are on by default only when Solid Queue is Active Job's adapter" do
+    assert_predicate Sightline.config, :solid_queue_checks?
+    adapter_name = ActiveJob::Base._queue_adapter_name
+    ActiveJob::Base._queue_adapter_name = "async"
+    assert_not Sightline.config.solid_queue_checks?
+    get "/admin/health", headers: ADMIN
+    assert_equal [ "Disk space", "Report queue" ], css_select(".sl-check-name").map(&:text)
+  ensure
+    ActiveJob::Base._queue_adapter_name = adapter_name
+  end
+
   test "the refresh picker keeps its choice in the URL" do
     get "/admin/health", headers: ADMIN
     assert_select ".sl-refresh-choice.sl-current", "Off"
