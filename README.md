@@ -34,7 +34,7 @@ SQLite on a local volume, and you can turn it off.
 
 ```ruby
 # Gemfile
-gem "sightline", github: "andrebras/sightline", tag: "v0.1.0"
+gem "sightline", github: "andrebras/sightline", tag: "v0.1.2"
 ```
 
 **2. Have an admin controller.** Sightline's pages inherit it, so it must refuse everyone who isn't an admin. If you
