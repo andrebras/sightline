@@ -61,6 +61,11 @@ It writes `config/initializers/sightline.rb` and mounts Sightline in `config/rou
 and test their own Solid Queue database, as production has, so Health and Jobs show real jobs locally. It changes
 `config/database.yml` only when it has the plain shape `rails new` writes; otherwise it tells you what to add.
 
+If your app keeps Solid Queue's tables in its primary database, the generator adds no queue databases. It assumes so
+when production in `config/database.yml` has no `queue` database; say so either way with `--queue-in-primary` or
+`--no-queue-in-primary`. When your databases aren't SQLite, the initializer suggests where Health's disk space check
+should look (`storage_path`), or turning it off.
+
 **4. Let your layout yield `:head`**, for Jobs' scripts:
 
 ```erb
@@ -71,7 +76,8 @@ and test their own Solid Queue database, as production has, so Health and Jobs s
 ```
 
 **5. Open `/admin`.** With only the admin controller set you already get:
-- **Health**, with every built-in check: job processes, failed jobs, recurring tasks, disk space;
+- **Health**, with every built-in check: disk space, and where Solid Queue is your job adapter, job processes,
+  failed jobs and recurring tasks;
 - **Jobs**;
 - an empty **Overview**, waiting for your numbers.
 
@@ -142,6 +148,14 @@ yours on `.sl` in your own stylesheet:
 .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}
 ```
 
+Text colours must reach 4.5:1 on your page background (WCAG AA). The defaults do, on white and on light tinted pages.
+If your accent is lighter than that, keep it for lines and bars and set `--sl-accent-text` to a darker shade, for links,
+the current tab and the selected refresh choice (white text on it):
+
+```css
+.sl{--sl-accent:#a96b43;--sl-accent-text:#8f5835}
+```
+
 If your layout already links the admin pages, turn off Sightline's own section links with `c.navigation = false`.
 
 ### Pages of your own
@@ -169,7 +183,7 @@ The page is listed after Overview, Health and Jobs, at `/admin/refunds`. Its tem
 | `jobs_path` | `nil` | Link a jobs dashboard elsewhere instead (with `jobs = false`). |
 | `job_actions` | `false` | Allow anything but GET in Jobs. |
 | `show_job_arguments` | `false` | Show jobs' arguments. |
-| `solid_queue_checks` | `nil` | Health's Solid Queue checks; `nil` means on when the app has Solid Queue. |
+| `solid_queue_checks` | `nil` | Health's Solid Queue checks; `nil` means on when the app has Solid Queue and it is Active Job's adapter in that environment, so they are off where jobs run on `:async` or `:test`. |
 | `recurring_grace` | `2.minutes` | How late a recurring run may be recorded before it counts as missed. |
 | `storage_path` | `nil` | The directory whose volume Health checks; `nil` means the first SQLite database's. |
 | `storage_warning_below` / `storage_problem_below` | `20` / `10` | Free space, in percent, for a warning and a problem. |
@@ -256,7 +270,8 @@ stylesheet is linked from each page, so your layout needs nothing added.
 | Property | Used for |
 |---|---|
 | `--sl-ink`, `--sl-muted`, `--sl-label` | Text, secondary text, small-caps labels |
-| `--sl-accent` | Links, the current tab, bars |
+| `--sl-accent` | The current tab's underline, bars |
+| `--sl-accent-text` | Links, the current tab's text, the selected refresh choice; `--sl-accent` unless you set it |
 | `--sl-surface`, `--sl-surface-alt`, `--sl-line` | Panels, table headers, borders |
 | `--sl-ok`, `--sl-warning`, `--sl-problem` and their `-soft` backgrounds | Check states and the headline |
 | `--sl-series-1` to `--sl-series-6` | Trend lines, in the series' order |

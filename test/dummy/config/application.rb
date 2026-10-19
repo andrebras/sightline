@@ -20,7 +20,7 @@ module Dummy
     config.consider_all_requests_local = true
     config.action_controller.allow_forgery_protection = false
     config.active_support.deprecation = :raise
-    config.active_job.queue_adapter = :test
+    config.active_job.queue_adapter = :solid_queue
     config.logger = Logger.new(nil)
   end
 end

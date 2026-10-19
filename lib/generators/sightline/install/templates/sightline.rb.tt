@@ -5,6 +5,12 @@ Sightline.configure do |c|
   c.title = "<%= app_title %>"
   # Retry, discard and run now in Jobs; off, Jobs is look-only.
   c.job_actions = false
+<% unless sqlite? -%>
+  # Health's disk space check reads the volume of the first SQLite database; without one it reads storage/'s.
+  # This app's databases aren't SQLite: point the check at the volume worth watching, or leave it out.
+  # c.storage_path = "/data"
+  # c.storage_check = false
+<% end -%>
 
   # Numbers and charts on the Overview, e.g.:
   # c.stat("Users") { User.count }

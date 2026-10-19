@@ -8,7 +8,7 @@
 .sl-jobs .tabs ul{display:flex;gap:5px;list-style:none;margin:0;padding:0;border-bottom:1px solid var(--sl-line);min-width:max-content}
 .sl-jobs .tabs a{display:block;padding:11px 15px;font-size:12px;color:var(--sl-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .sl-jobs .tabs a:hover{color:var(--sl-ink)}
-.sl-jobs .tabs li.is-active a{border-bottom-color:var(--sl-accent);color:var(--sl-accent);font-weight:600}
+.sl-jobs .tabs li.is-active a{border-bottom-color:var(--sl-accent);color:var(--sl-accent-text);font-weight:600}
 
 /* Bulma's layout helpers that the gem's markup relies on. */
 .sl-jobs .level{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;margin-bottom:20px}
@@ -48,7 +48,7 @@
 .sl-jobs .table tbody th{font-weight:600;color:var(--sl-ink);white-space:nowrap;width:1%}
 .sl-jobs .table.is-hoverable tbody tr:hover{background:var(--sl-surface-alt)}
 .sl-jobs .table td.pr-0{white-space:nowrap}
-.sl-jobs .table a{color:var(--sl-accent);font-weight:600}
+.sl-jobs .table a{color:var(--sl-accent-text);font-weight:600}
 .sl-jobs .table tr.job td:nth-child(2)>a{color:var(--sl-problem)}
 .sl-jobs table.jobs td{word-break:normal;overflow-wrap:anywhere}
 
@@ -56,7 +56,7 @@
 .sl-jobs .buttons{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 .sl-jobs .buttons.is-right{justify-content:flex-end}
 .sl-jobs .buttons form,.sl-jobs .field form{margin:0}
-.sl-jobs .button,.sl-jobs .pagination-previous,.sl-jobs .pagination-next{display:inline-flex;align-items:center;min-height:0;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--sl-surface);border:1px solid var(--sl-line);color:var(--sl-accent);white-space:nowrap}
+.sl-jobs .button,.sl-jobs .pagination-previous,.sl-jobs .pagination-next{display:inline-flex;align-items:center;min-height:0;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--sl-surface);border:1px solid var(--sl-line);color:var(--sl-accent-text);white-space:nowrap}
 .sl-jobs .button:hover,.sl-jobs .pagination-previous:hover,.sl-jobs .pagination-next:hover{background:var(--sl-surface-alt);color:var(--sl-ink);transform:none}
 .sl-jobs .button.is-danger{background:var(--sl-problem-soft);border-color:var(--sl-problem-soft);color:var(--sl-problem)}
 .sl-jobs .button.is-danger:hover{background:var(--sl-problem-soft);color:var(--sl-problem)}
