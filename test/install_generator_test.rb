@@ -69,6 +69,44 @@ class InstallGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  test "an app whose production keeps Solid Queue in the primary database gets no queue databases" do
+    postgres = <<~YAML
+      default: &default
+        adapter: postgresql
+
+      development:
+        <<: *default
+        database: app_development
+
+      production:
+        <<: *default
+        url: <%= ENV["DATABASE_URL"] %>
+    YAML
+    write "config/database.yml", postgres
+    output = run_generator
+    assert_equal postgres, File.read(File.join(destination_root, "config/database.yml"))
+    assert_match(/Solid Queue stays in the primary database/, output)
+    assert_no_match(/by hand/, output)
+    assert_file("config/environments/development.rb") { |content| assert_no_match(/solid_queue\.connects_to/, content) }
+    assert_file "config/initializers/sightline.rb", /# c\.storage_path = /
+  end
+
+  test "--queue-in-primary leaves even a plain SQLite database.yml alone" do
+    run_generator %w[--queue-in-primary]
+    assert_equal DATABASE_YML, File.read(File.join(destination_root, "config/database.yml"))
+    assert_file("config/environments/test.rb") { |content| assert_no_match(/solid_queue\.connects_to/, content) }
+    assert_file("config/initializers/sightline.rb") { |content| assert_no_match(/storage_path/, content) }
+  end
+
+  test "--no-queue-in-primary adds the queue databases although production has none" do
+    production = "production:\n  <<: *default\n  database: storage/production.sqlite3\n"
+    write "config/database.yml", DATABASE_YML.sub(/^production:.*/m, production)
+    run_generator %w[--no-queue-in-primary]
+    database = YAML.safe_load_file(File.join(destination_root, "config/database.yml"), aliases: true)
+    assert_equal "storage/test_queue.sqlite3", database.dig("test", "queue", "database")
+    assert_file "config/environments/test.rb", /solid_queue\.connects_to/
+  end
+
   test "a database.yml it doesn't recognize is left alone, with instructions" do
     postgres = "development:\n  adapter: postgresql\n  database: app_development\n"
     write "config/database.yml", postgres

@@ -61,6 +61,11 @@ It writes `config/initializers/sightline.rb` and mounts Sightline in `config/rou
 and test their own Solid Queue database, as production has, so Health and Jobs show real jobs locally. It changes
 `config/database.yml` only when it has the plain shape `rails new` writes; otherwise it tells you what to add.
 
+If your app keeps Solid Queue's tables in its primary database, the generator adds no queue databases. It assumes so
+when production in `config/database.yml` has no `queue` database; say so either way with `--queue-in-primary` or
+`--no-queue-in-primary`. When your databases aren't SQLite, the initializer suggests where Health's disk space check
+should look (`storage_path`), or turning it off.
+
 **4. Let your layout yield `:head`**, for Jobs' scripts:
 
 ```erb
