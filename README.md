@@ -142,6 +142,14 @@ yours on `.sl` in your own stylesheet:
 .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}
 ```
 
+Text colours must reach 4.5:1 on your page background (WCAG AA). The defaults do, on white and on light tinted pages.
+If your accent is lighter than that, keep it for lines and bars and set `--sl-accent-text` to a darker shade, for links,
+the current tab and the selected refresh choice (white text on it):
+
+```css
+.sl{--sl-accent:#a96b43;--sl-accent-text:#8f5835}
+```
+
 If your layout already links the admin pages, turn off Sightline's own section links with `c.navigation = false`.
 
 ### Pages of your own
@@ -256,7 +264,8 @@ stylesheet is linked from each page, so your layout needs nothing added.
 | Property | Used for |
 |---|---|
 | `--sl-ink`, `--sl-muted`, `--sl-label` | Text, secondary text, small-caps labels |
-| `--sl-accent` | Links, the current tab, bars |
+| `--sl-accent` | The current tab's underline, bars |
+| `--sl-accent-text` | Links, the current tab's text, the selected refresh choice; `--sl-accent` unless you set it |
 | `--sl-surface`, `--sl-surface-alt`, `--sl-line` | Panels, table headers, borders |
 | `--sl-ok`, `--sl-warning`, `--sl-problem` and their `-soft` backgrounds | Check states and the headline |
 | `--sl-series-1` to `--sl-series-6` | Trend lines, in the series' order |

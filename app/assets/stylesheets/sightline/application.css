@@ -1,19 +1,23 @@
 /* Sightline's pages. Every class starts with sl-, and everything sits inside .sl.
    Colours and fonts are custom properties with neutral defaults; an app sets its own on .sl, e.g.
-   .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}. The defaults use :where() so any .sl rule wins. */
+   .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}. The defaults use :where() so any .sl rule wins.
+   Text colours reach 4.5:1 (WCAG AA) on white and on light tinted pages, and the state colours on their -soft
+   backgrounds. --sl-accent-text is the accent where it is text, or behind white text; it follows --sl-accent unless an
+   app with a light accent sets a darker shade. */
 :where(.sl){
   --sl-ink:#1f2328;
-  --sl-muted:#636c76;
+  --sl-muted:#5c6570;
   --sl-label:#57606a;
-  --sl-accent:#0969da;
+  --sl-accent:#0860c8;
+  --sl-accent-text:var(--sl-accent);
   --sl-surface:#fff;
   --sl-surface-alt:#f6f8fa;
   --sl-line:#d8dee4;
-  --sl-ok:#1a7f37;
+  --sl-ok:#187534;
   --sl-ok-soft:#e6f4ea;
-  --sl-warning:#9a6700;
+  --sl-warning:#8a5c00;
   --sl-warning-soft:#fff8c5;
-  --sl-problem:#cf222e;
+  --sl-problem:#c21f2b;
   --sl-problem-soft:#ffebe9;
   --sl-radius:12px;
   --sl-font:inherit;
@@ -39,13 +43,13 @@
 .sl-nav{display:flex;gap:4px;border-bottom:1px solid var(--sl-line);margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
 .sl-nav-link{padding:10px 16px;font-size:13px;color:var(--sl-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;text-decoration:none}
 .sl-nav-link:hover{color:var(--sl-ink)}
-.sl-nav-link.sl-current{border-bottom-color:var(--sl-accent);color:var(--sl-accent);font-weight:600}
+.sl-nav-link.sl-current{border-bottom-color:var(--sl-accent);color:var(--sl-accent-text);font-weight:600}
 
 /* Sections and panels. */
 .sl-section{margin:0 0 32px}
 .sl-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 12px}
 .sl-section-heading h2{font-size:16px;margin:0}
-.sl-link{font-size:12px;font-weight:600;color:var(--sl-accent)}
+.sl-link{font-size:12px;font-weight:600;color:var(--sl-accent-text)}
 .sl-panel{background:var(--sl-surface);border:1px solid var(--sl-line);border-radius:var(--sl-radius);padding:20px 24px}
 .sl-empty{color:var(--sl-muted);margin:0}
 .sl-fine-print{font-size:11px;color:var(--sl-muted);margin:20px 0}
@@ -129,7 +133,7 @@
 .sl-refresh-label{color:var(--sl-label);font-weight:600;padding:0 8px}
 .sl-refresh-choice{padding:4px 10px;border-radius:6px;color:var(--sl-muted);text-decoration:none}
 .sl-refresh-choice:hover{color:var(--sl-ink)}
-.sl-refresh-choice.sl-current{background:var(--sl-accent);color:var(--sl-surface);font-weight:600}
+.sl-refresh-choice.sl-current{background:var(--sl-accent-text);color:var(--sl-surface);font-weight:600}
 
 @media(max-width:700px){
   .sl-check{padding:12px 14px;gap:10px;flex-direction:column}
