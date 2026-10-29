@@ -110,3 +110,17 @@ stylesheet is linked from each page, so your layout needs nothing added.
 | `--sl-ok`, `--sl-warning`, `--sl-problem` and their `-soft` backgrounds | Check states and the headline |
 | `--sl-series-1` to `--sl-series-6` | Trend lines, in the series' order |
 | `--sl-radius`, `--sl-font`, `--sl-font-heading` | Corners and type |
+
+## About the screenshots
+
+The pictures in `docs/screenshots/` come from a throwaway Rails 8 app, "Demo Shop", that uses Sightline from this
+repository, with Solid Queue running inside Puma (`SOLID_QUEUE_IN_PUMA=1`). Its data is made up: generated customers
+and orders, a few finished jobs, one job that fails on purpose, two recurring tasks and one check of its own
+("Latest order"). The app's layout sets only a sans-serif font and the page margins; everything else is Sightline's
+default look. So that no real machine shows, `storage_path` is set to `"storage"` and the job processes' host name
+was changed to `demo-shop.local` in the queue database.
+
+They were taken with headless Chromium through [Playwright](https://playwright.dev), 1280 pixels wide, full page, and
+reduced to 256 colours with ImageMagick (`magick in.png -strip -colors 256 PNG8:out.png`). The Jobs picture is Mission
+Control's list of failed jobs, with job arguments hidden as they are by default. To update them, build a similar app,
+open `/admin`, `/admin/health` and the failed jobs in `/admin/jobs`, and capture them the same way.
