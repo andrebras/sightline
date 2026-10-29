@@ -40,6 +40,17 @@ class OverviewTest < Sightline::IntegrationTest
     assert_equal %w[0] * 7, css_select(".sl-bars li strong").map(&:text)
   end
 
+  test "the bar chart has no inline styles, so a strict Content Security Policy (style-src 'self') allows it" do
+    job(created_at: Time.current)
+    job(created_at: 2.days.ago)
+    job(created_at: 2.days.ago)
+    get "/admin", headers: ADMIN
+    assert_select ".sl-bars[style], .sl-bars [style]", 0
+    assert_not_includes css_select(".sl-bars").to_s, "style="
+    # Each bar's height is its share of the tallest, as an SVG attribute: 0, 50% and 100% here.
+    assert_equal %w[0% 0% 0% 0% 100% 0% 50%], css_select(".sl-bars .sl-bar").pluck("height")
+  end
+
   test "daily values line up with the dates whether given as a list or keyed by day" do
     dates = [ Date.new(2026, 1, 1), Date.new(2026, 1, 2), Date.new(2026, 1, 3) ]
     assert_equal [ 0, 5, 2 ], Sightline::Overview.align(dates, { "2026-01-02" => 5, Date.new(2026, 1, 3) => 2 })
