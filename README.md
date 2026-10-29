@@ -205,7 +205,7 @@ use `sightline.overview_path`, `sightline.health_path` and `sightline.jobs_path`
 Control yourself.
 
 **`config/database.yml`.** The generator changes it only when it has the plain shape `rails new` writes; otherwise it
-tells you what to add.
+tells you what to add, there and in `config/environments/development.rb` and `test.rb`, and changes neither.
 
 **Solid Queue in the primary database.** If your app keeps Solid Queue's tables in its primary database, the generator
 adds no queue databases. It assumes so when production in `config/database.yml` has no `queue` database; say so either
