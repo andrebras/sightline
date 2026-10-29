@@ -7,6 +7,9 @@ Each version is a `vX.Y.Z` tag in this repository.
 
 ### Fixed
 
+- Health's Storage card no longer shows the machine's full path as the volume when `storage_path` isn't set. It shows
+  the databases' directory relative to the app (such as `storage`), or only its own name when it is outside the app.
+  A configured `storage_path` still shows as written.
 - Jobs no longer adds Mission Control – Jobs' import map to the page. Its names (`application`, `controllers`) clashed
   with an app's own import map, so one app's scripts didn't load. `sightline/jobs.js`, a plain script, now does what
   those scripts did on Jobs' screens, and `yield :head` in the app's layout is optional.
