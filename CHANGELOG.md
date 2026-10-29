@@ -10,6 +10,9 @@ Each version is a `vX.Y.Z` tag in this repository.
 - Jobs no longer adds Mission Control – Jobs' import map to the page. Its names (`application`, `controllers`) clashed
   with an app's own import map, so one app's scripts didn't load. `sightline/jobs.js`, a plain script, now does what
   those scripts did on Jobs' screens, and `yield :head` in the app's layout is optional.
+- The install generator changes `config/environments/development.rb` and `test.rb` only when it also adds the queue
+  databases to `config/database.yml`. When it leaves `database.yml` alone, it now leaves those alone too, and says what
+  to add to both, instead of pointing Solid Queue at a database that doesn't exist.
 
 ### Changed
 
