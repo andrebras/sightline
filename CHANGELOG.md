@@ -5,6 +5,11 @@ Each version is a `vX.Y.Z` tag in this repository.
 
 ## [Unreleased]
 
+### Fixed
+
+- The Overview's bar chart has no inline `style` attributes, so a strict Content Security Policy (`style-src 'self'`)
+  no longer flattens it. Each bar is now drawn at its exact share of the tallest one.
+
 ### Changed
 
 - The README is reorganised: a screenshot, a short "Why", a table of contents, a quick start without edge cases, and
