@@ -13,6 +13,8 @@ Each version is a `vX.Y.Z` tag in this repository.
 - The install generator changes `config/environments/development.rb` and `test.rb` only when it also adds the queue
   databases to `config/database.yml`. When it leaves `database.yml` alone, it now leaves those alone too, and says what
   to add to both, instead of pointing Solid Queue at a database that doesn't exist.
+- The Overview's bar chart has no inline `style` attributes, so a strict Content Security Policy (`style-src 'self'`)
+  no longer flattens it. Each bar is now drawn at its exact share of the tallest one.
 
 ### Changed
 
