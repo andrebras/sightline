@@ -13,6 +13,7 @@ Each version is a `vX.Y.Z` tag in this repository.
 ### Added
 
 - Screenshots of Overview, Health and Jobs in `docs/screenshots/`.
+- A GIF of the install, from `rails new` to the dashboard, under the README's Quick start.
 - This changelog.
 
 ## [0.1.2] - 2026-10-19
