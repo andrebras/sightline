@@ -3,6 +3,13 @@
 **An admin dashboard for your Rails app, in your app's own look: your numbers, whether everything is working, and
 your background jobs. One gem, one generator, one initializer.**
 
+[![Checks](https://github.com/andrebras/sightline/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/andrebras/sightline/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Ruby 3.4+](https://img.shields.io/badge/ruby-3.4%2B-CC342D.svg)](https://www.ruby-lang.org)
+[![Rails 8+](https://img.shields.io/badge/rails-8%2B-D30001.svg)](https://rubyonrails.org)
+
+![Sightline's Overview page: four stat cards, a 30-day trend chart of sign-ups and orders, and a bar per day of orders, from a demo shop with made-up data](docs/screenshots/overview.png)
+
 Most Rails apps end up with the same admin pages: a few key numbers, a "is everything OK?" page someone checks when a
 user complains, and a jobs dashboard. Sightline gives you all three, behind the admin check you already have.
 
@@ -12,82 +19,96 @@ user complains, and a jobs dashboard. Sightline gives you all three, behind the 
 | **Health** | Whether things are working: Solid Queue's processes, failed jobs, recurring tasks that missed their schedule, free disk space, your own checks, and the system and storage it runs on. All green, or exactly what needs a look. |
 | **Jobs** | [Mission Control – Jobs](https://github.com/rails/mission_control-jobs), set up for you: same admin check, same layout, job arguments hidden, look-only until you allow actions. |
 
-**What makes it different**
+<details>
+<summary>Screenshots of Health and Jobs</summary>
+
+![Sightline's Health page: a red banner saying two things need a look, check lines for job processes, failed jobs, recurring tasks, disk space and an app check, then System and Storage cards and a table of recurring tasks](docs/screenshots/health.png)
+
+![Sightline's Jobs page: Mission Control's list of failed jobs, inside the app's layout, with the job's arguments hidden](docs/screenshots/jobs.png)
+
+</details>
+
+## Why Sightline
 
 - **No sign-in, no layout and no look of its own.** It inherits a controller you already have, so your sign-in
   and admin check decide who gets in. It renders inside your layout and takes your colours.
-- **Everything in one initializer.** No migrations, no admin DSL to learn: a stat is a block that returns a number, and a
-  check is a block that returns ok, warning or problem.
+- **Everything in one initializer.** No migrations, no admin DSL (a special language for describing admin pages) to
+  learn: a stat is a block that returns a number, and a check is a block that returns ok, warning or problem.
 - **Safe by default.** Job actions (retry, discard, run now) are off, and job arguments, which often hold people's
   emails and names, are hidden. Without an admin controller set, nothing is served.
 - **Knows Solid Queue.** It works out from each recurring task's schedule whether it should have run, so a job that
   quietly stopped shows up on Health, with no thresholds to tune.
 
+## Contents
+
+- [Requirements](#requirements)
+- [Quick start](#quick-start)
+- [Usage](#usage)
+- [Notes and troubleshooting](#notes-and-troubleshooting)
+- [Reference](#reference)
+- [Contributing](#contributing)
+- [Changelog](#changelog)
+- [License](#license)
+
 ## Requirements
 
-Ruby 3.4+, Rails 8+ and Solid Queue. Sightline brings Mission Control – Jobs with it. Health's disk space check expects
-SQLite on a local volume, and you can turn it off.
+- Ruby 3.4 or newer
+- Rails 8 or newer
+- [Solid Queue](https://github.com/rails/solid_queue), Rails' database-backed job queue
+
+Sightline brings Mission Control – Jobs with it.
 
 ## Quick start
 
-**1. Add the gem**, installed from GitHub and pinned to a release:
+1. **Add the gem** to your `Gemfile`. It is installed from GitHub, pinned to a release tag:
 
-```ruby
-# Gemfile
-gem "sightline", github: "andrebras/sightline", tag: "v0.1.2"
-```
+   ```ruby
+   gem "sightline", github: "andrebras/sightline", tag: "v0.1.2"
+   ```
 
-**2. Have an admin controller.** Sightline's pages inherit it, so it must refuse everyone who isn't an admin. If you
-don't have one yet, something like this, using the authentication Rails 8 generates:
+2. **Have an admin controller.** Sightline's pages inherit it, so it must refuse everyone who isn't an admin. If you
+   don't have one yet, something like this, using the authentication Rails 8 generates:
 
-```ruby
-# app/controllers/admin/base_controller.rb
-module Admin
-  class BaseController < ApplicationController
-    before_action { head :not_found unless Current.user&.admin? }
-  end
-end
-```
+   ```ruby
+   # app/controllers/admin/base_controller.rb
+   module Admin
+     class BaseController < ApplicationController
+       before_action { head :not_found unless Current.user&.admin? }
+     end
+   end
+   ```
 
-**3. Run the generator:**
+3. **Run the generator:**
 
-```sh
-bundle install
-bin/rails generate sightline:install --base-controller=Admin::BaseController --mount-at=/admin
-bin/rails db:prepare
-```
+   ```sh
+   bundle install
+   bin/rails generate sightline:install --base-controller=Admin::BaseController --mount-at=/admin
+   bin/rails db:prepare
+   ```
 
-It writes `config/initializers/sightline.rb` and mounts Sightline in `config/routes.rb`. It also gives development
-and test their own Solid Queue database, as production has, so Health and Jobs show real jobs locally. It changes
-`config/database.yml` only when it has the plain shape `rails new` writes; otherwise it tells you what to add.
+   It writes `config/initializers/sightline.rb` and mounts Sightline in `config/routes.rb`. It also gives development
+   and test their own Solid Queue database, as production has, so Health and Jobs show real jobs locally. See
+   [Notes and troubleshooting](#notes-and-troubleshooting) if your app keeps Solid Queue in its primary database or
+   doesn't use SQLite.
 
-If your app keeps Solid Queue's tables in its primary database, the generator adds no queue databases. It assumes so
-when production in `config/database.yml` has no `queue` database; say so either way with `--queue-in-primary` or
-`--no-queue-in-primary`. When your databases aren't SQLite, the initializer suggests where Health's disk space check
-should look (`storage_path`), or turning it off.
+4. **Let your layout yield `:head`**, for Jobs' scripts:
 
-**4. Let your layout yield `:head`**, for Jobs' scripts:
+   ```erb
+   <head>
+     ...
+     <%= yield :head %>
+   </head>
+   ```
 
-```erb
-<head>
-  ...
-  <%= yield :head %>
-</head>
-```
+5. **Open `/admin`.** With only the admin controller set you already get:
+   - **Health**, with every built-in check: disk space, and where Solid Queue is your job adapter, job processes,
+     failed jobs and recurring tasks;
+   - **Jobs**;
+   - an empty **Overview**, waiting for your numbers.
 
-**5. Open `/admin`.** With only the admin controller set you already get:
-- **Health**, with every built-in check: disk space, and where Solid Queue is your job adapter, job processes,
-  failed jobs and recurring tasks;
-- **Jobs**;
-- an empty **Overview**, waiting for your numbers.
+   Run your jobs locally (`bin/jobs`, or `SOLID_QUEUE_IN_PUMA=1 bin/rails server`) to see them working.
 
-Run your jobs locally (`bin/jobs`, or `SOLID_QUEUE_IN_PUMA=1 bin/rails server`) to see them working.
-
-The pages are at `/admin`, `/admin/health` and `/admin/jobs`. To link to them from your app, use
-`sightline.overview_path`, `sightline.health_path` and `sightline.jobs_path`. Mount Sightline after your app's own
-`/admin` routes, so those keep their paths. Don't mount Mission Control yourself.
-
-## Make it yours
+## Usage
 
 Everything below goes in `config/initializers/sightline.rb`. Blocks run on each page view, never at boot, so they can
 use your models and service objects.
@@ -148,7 +169,8 @@ yours on `.sl` in your own stylesheet:
 .sl{--sl-accent:#486440;--sl-font-heading:Georgia,serif}
 ```
 
-Text colours must reach 4.5:1 on your page background (WCAG AA). The defaults do, on white and on light tinted pages.
+Text colours must reach a contrast of 4.5:1 on your page background (WCAG AA, the usual level of the Web Content
+Accessibility Guidelines). The defaults do, on white and on light tinted pages.
 If your accent is lighter than that, keep it for lines and bars and set `--sl-accent-text` to a darker shade, for links,
 the current tab and the selected refresh choice (white text on it):
 
@@ -167,16 +189,47 @@ c.page "Refunds", path: "refunds", template: "admin/refunds"
 The page is listed after Overview, Health and Jobs, at `/admin/refunds`. Its template can use the same
 [pieces](docs/reference.md#pieces) as Sightline's pages.
 
+## Notes and troubleshooting
+
+**Where the pages are.** The pages are at `/admin`, `/admin/health` and `/admin/jobs`. To link to them from your app,
+use `sightline.overview_path`, `sightline.health_path` and `sightline.jobs_path`.
+
+**Mounting.** Mount Sightline after your app's own `/admin` routes, so those keep their paths. Don't mount Mission
+Control yourself.
+
+**`config/database.yml`.** The generator changes it only when it has the plain shape `rails new` writes; otherwise it
+tells you what to add.
+
+**Solid Queue in the primary database.** If your app keeps Solid Queue's tables in its primary database, the generator
+adds no queue databases. It assumes so when production in `config/database.yml` has no `queue` database; say so either
+way with `--queue-in-primary` or `--no-queue-in-primary`.
+
+**Disk space check.** Health's disk space check expects SQLite on a local volume, and you can turn it off
+(`c.storage_check = false`). When your databases aren't SQLite, the initializer suggests where the check should look
+(`storage_path`), or turning it off.
+
 ## Reference
 
-Every setting, declaration, helper and style property is listed in [docs/reference.md](docs/reference.md).
+Every setting, declaration, helper and style property is listed in [docs/reference.md](docs/reference.md), with how
+Health decides what is wrong and how Jobs is set up.
 
-## Development
+## Contributing
+
+Bug reports and pull requests are welcome: open an [issue](https://github.com/andrebras/sightline/issues) or a
+[pull request](https://github.com/andrebras/sightline/pulls) on GitHub.
+
+To work on Sightline, clone the repository, run `bundle install`, then:
 
 ```sh
 bin/test                 # tests, against a dummy app with real Solid Queue records
 bundle exec rubocop      # lint
 ```
+
+Both also run on GitHub Actions for every push and pull request.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
