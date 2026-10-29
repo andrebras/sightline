@@ -19,7 +19,7 @@ Every setting and declaration, and how Health and Jobs work. For installing Sigh
 | `show_job_arguments` | `false` | Show jobs' arguments. |
 | `solid_queue_checks` | `nil` | Health's Solid Queue checks; `nil` means on when the app has Solid Queue and it is Active Job's adapter in that environment, so they are off where jobs run on `:async` or `:test`. |
 | `recurring_grace` | `2.minutes` | How late a recurring run may be recorded before it counts as missed. |
-| `storage_path` | `nil` | The directory whose volume Health checks; `nil` means the first SQLite database's. |
+| `storage_path` | `nil` | The directory whose volume Health checks, shown as set; `nil` means the first SQLite database's, shown relative to the app (`storage`), or by its own name outside it. |
 | `storage_warning_below` / `storage_problem_below` | `20` / `10` | Free space, in percent, for a warning and a problem. |
 | `storage_check` | `true` | `false` leaves out the Storage card and the disk space check. |
 

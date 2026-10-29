@@ -11,10 +11,13 @@ module Sightline
     # SQLite's write-ahead log and shared memory files sit beside each database and hold its recent writes.
     SQLITE_SUFFIXES = [ "", "-wal", "-shm" ].freeze
 
-    attr_reader :path
+    # label is what Health shows for the volume: the path as the app configured it, or, for the directory Sightline
+    # found itself, a short name (label_for), so the machine's full path, which can name its user, doesn't show.
+    attr_reader :path, :label
 
-    def initialize(path:, database_paths: [], warning_below: 20, problem_below: 10)
+    def initialize(path:, label: nil, database_paths: [], warning_below: 20, problem_below: 10)
       @path = path.to_s
+      @label = label || @path
       @database_paths = database_paths
       @warning_below = warning_below
       @problem_below = problem_below
@@ -22,15 +25,26 @@ module Sightline
 
     # The SQLite databases of this environment, from config/database.yml, and the directory of the first one.
     def self.from_app(config)
-      paths = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).filter_map do |db_config|
+      paths = sqlite_paths
+      found = paths.any? ? File.dirname(paths.first) : Rails.root.join("storage").to_s
+      new(path: config.storage_path || found, label: config.storage_path&.to_s || label_for(found),
+          database_paths: paths,
+          warning_below: config.storage_warning_below, problem_below: config.storage_problem_below)
+    end
+
+    def self.sqlite_paths
+      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).filter_map do |db_config|
         database = db_config.database.to_s
         next unless db_config.adapter.to_s.include?("sqlite") && database.exclude?(":memory:")
 
         File.expand_path(database, Rails.root)
       end
-      new(path: config.storage_path || (paths.any? ? File.dirname(paths.first) : Rails.root.join("storage").to_s),
-          database_paths: paths,
-          warning_below: config.storage_warning_below, problem_below: config.storage_problem_below)
+    end
+
+    # The directory relative to the app (storage, db/sqlite), or its own name when it's the app's or outside it.
+    def self.label_for(directory)
+      relative = Pathname(directory).relative_path_from(Rails.root).to_s
+      relative == "." || relative.start_with?("..") ? File.basename(directory) : relative
     end
 
     def space
@@ -48,7 +62,7 @@ module Sightline
     end
 
     def result
-      return Sightline.warning("Couldn't read free space", detail: "df -Pk #{path} gave no answer.") unless space
+      return Sightline.warning("Couldn't read free space", detail: "df gave no answer for #{label}.") unless space
 
       free = space.percent_free
       summary = "#{format_bytes(space.available)} free of #{format_bytes(space.total)} (#{free.round}%)"
