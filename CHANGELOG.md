@@ -7,6 +7,9 @@ Each version is a `vX.Y.Z` tag in this repository.
 
 ### Fixed
 
+- Jobs no longer adds Mission Control – Jobs' import map to the page. Its names (`application`, `controllers`) clashed
+  with an app's own import map, so one app's scripts didn't load. `sightline/jobs.js`, a plain script, now does what
+  those scripts did on Jobs' screens, and `yield :head` in the app's layout is optional.
 - The Overview's bar chart has no inline `style` attributes, so a strict Content Security Policy (`style-src 'self'`)
   no longer flattens it. Each bar is now drawn at its exact share of the tallest one.
 
@@ -18,6 +21,7 @@ Each version is a `vX.Y.Z` tag in this repository.
 ### Added
 
 - Screenshots of Overview, Health and Jobs in `docs/screenshots/`.
+- A GIF of the install, from `rails new` to the dashboard, under the README's Quick start.
 - This changelog.
 
 ## [0.1.2] - 2026-10-19

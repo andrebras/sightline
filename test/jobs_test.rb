@@ -29,8 +29,16 @@ class JobsTest < Sightline::IntegrationTest
     assert_select ".sl-nav a.sl-current[href='/admin/jobs']", "Jobs"
     assert_select "link[href*='sightline/jobs']"
     assert_select "link[href*='bulma']", 0
-    assert_select "head script[type=importmap]"
     assert_includes response.body, "SMTP down"
+  end
+
+  test "Jobs keeps the app's import map, the page's only one, and brings its own script" do
+    get failed_path, headers: ADMIN
+    assert_select "script[type=importmap]", 1
+    imports = JSON.parse(css_select("script[type=importmap]").first.text)["imports"]
+    assert_match %r{\A/assets/application-\w+\.js\z}, imports["application"]
+    assert_not imports.key?("controllers")
+    assert_select ".sl-jobs script[src*='sightline/jobs'][defer]"
   end
 
   test "links leave out the server picker when there is one job server" do

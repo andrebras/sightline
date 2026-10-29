@@ -64,6 +64,9 @@ Sightline mounts Mission Control at `/<mount>/jobs` and sets it up (`lib/sightli
 - **Layout:** its pages render inside your layout (`layout`, else `application`), under Sightline's header and
   navigation. Mission Control's Bulma stylesheet is left out, because its global classes would restyle your app;
   `sightline/jobs.css` styles its screens with the same `--sl-*` properties. Your route helpers work there too.
+- **Scripts:** Mission Control's import map is left out, so it can't clash with your app's. `sightline/jobs.js`, a
+  plain script, applies a filter as soon as it changes and asks before deleting (Turbo asks instead when your app runs
+  it). Without Turbo in your app, Jobs' pages load as full pages.
 - **Arguments:** hidden in every list and on each job's page, unless `show_job_arguments` is on.
 - **One server:** Mission Control's `server_id` is left out of links when there is one job server.
 - **Actions:** unless `job_actions` is on, any request other than GET or HEAD gets 403 "Job actions are turned off".
@@ -113,7 +116,7 @@ stylesheet is linked from each page, so your layout needs nothing added.
 
 ## About the screenshots
 
-The pictures in `docs/screenshots/` come from a throwaway Rails 8 app, "Demo Shop", that uses Sightline from this
+The PNG pictures in `docs/screenshots/` come from a throwaway Rails 8 app, "Demo Shop", that uses Sightline from this
 repository, with Solid Queue running inside Puma (`SOLID_QUEUE_IN_PUMA=1`). Its data is made up: generated customers
 and orders, a few finished jobs, one job that fails on purpose, two recurring tasks and one check of its own
 ("Latest order"). The app's layout sets only a sans-serif font and the page margins; everything else is Sightline's
@@ -124,3 +127,11 @@ They were taken with headless Chromium through [Playwright](https://playwright.d
 reduced to 256 colours with ImageMagick (`magick in.png -strip -colors 256 PNG8:out.png`). The Jobs picture is Mission
 Control's list of failed jobs, with job arguments hidden as they are by default. To update them, build a similar app,
 open `/admin`, `/admin/health` and the failed jobs in `/admin/jobs`, and capture them the same way.
+
+`install.gif` is a different app: a brand-new one made with `rails new` (Rails 8.1), with no data. The terminal part is
+the real commands, recorded with [asciinema](https://asciinema.org) and drawn with
+[agg](https://github.com/asciinema/agg) at 2.5 times the speed; it stops once the server is up. In that recording,
+absolute paths in the output were shortened (`~/projects`, `~/.gem`). The browser part is screenshots from Playwright,
+with an address bar and a pointer drawn into the page. Before it, `storage_path` was set to `"storage"` and the job
+processes' host name was changed, as for the screenshots. The two parts were joined and turned into a GIF with
+[ffmpeg](https://ffmpeg.org) (`palettegen` and `paletteuse`, 128 colours, 10 frames a second, 960 pixels wide).
