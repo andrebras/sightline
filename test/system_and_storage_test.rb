@@ -76,7 +76,7 @@ class SystemAndStorageTest < Sightline::IntegrationTest
 
   test "a path df can't read names the volume by its label" do
     result = Sightline::Storage.new(path: File.join(@dir, "missing"), label: "storage").result
-    assert_equal "df -Pk storage gave no answer.", result.detail.to_s
+    assert_equal "df gave no answer for storage.", result.detail.to_s
   end
 
   test "the disk check follows the configured path and thresholds" do

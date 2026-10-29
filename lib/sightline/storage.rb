@@ -62,7 +62,7 @@ module Sightline
     end
 
     def result
-      return Sightline.warning("Couldn't read free space", detail: "df -Pk #{label} gave no answer.") unless space
+      return Sightline.warning("Couldn't read free space", detail: "df gave no answer for #{label}.") unless space
 
       free = space.percent_free
       summary = "#{format_bytes(space.available)} free of #{format_bytes(space.total)} (#{free.round}%)"
