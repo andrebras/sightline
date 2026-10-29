@@ -26,7 +26,7 @@
       <% space = storage.space %>
       <%= sl_card "Storage", [
             [ "Free", space ? "#{number_to_human_size(space.available)} of #{number_to_human_size(space.total)}" : "Unknown" ],
-            [ "Volume", storage.path ],
+            [ "Volume", storage.label ],
             *storage.database_files.map { |file| [ file.name, number_to_human_size(file.size) ] }
           ], id: "sl-storage" %>
     <% end %>

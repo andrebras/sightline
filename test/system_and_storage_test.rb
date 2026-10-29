@@ -60,8 +60,23 @@ class SystemAndStorageTest < Sightline::IntegrationTest
     assert_select "#sl-system dd", "Running locally"
     assert_select "#sl-system dd", /\d+(\.\d+)? MB/
     assert_select "#sl-storage dt", "test.sqlite3"
-    assert_select "#sl-storage dd", File.expand_path("dummy/tmp", __dir__)
+    # The databases' directory, relative to the app: never the machine's full path, which can name its user.
+    assert_select "#sl-storage dd", "tmp"
+    assert_not_includes response.body, Rails.root.to_s
     assert_select ".sl-check.sl-ok .sl-check-name", "Disk space"
+  end
+
+  test "a found directory is labelled relative to the app, or by its own name outside it" do
+    storage = Sightline::Storage.new(path: @dir)
+    assert_equal File.basename(@dir), Sightline::Storage.label_for(@dir)
+    assert_equal "storage", Sightline::Storage.label_for(Rails.root.join("storage").to_s)
+    assert_equal Rails.root.basename.to_s, Sightline::Storage.label_for(Rails.root.to_s)
+    assert_equal @dir, storage.label, "a path given outright shows as given"
+  end
+
+  test "a path df can't read names the volume by its label" do
+    result = Sightline::Storage.new(path: File.join(@dir, "missing"), label: "storage").result
+    assert_equal "df -Pk storage gave no answer.", result.detail.to_s
   end
 
   test "the disk check follows the configured path and thresholds" do
