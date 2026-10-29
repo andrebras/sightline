@@ -26,6 +26,8 @@ user complains, and a jobs dashboard. Sightline gives you all three, behind the 
 
 ![Sightline's Jobs page: Mission Control's list of failed jobs, inside the app's layout, with the job's arguments hidden](docs/screenshots/jobs.png)
 
+Job actions are switched on here (`c.job_actions = true`); they're off by default.
+
 </details>
 
 ## Why Sightline
