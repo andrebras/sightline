@@ -30,15 +30,23 @@ class InstallGeneratorTest < Rails::Generators::TestCase
         migrations_paths: db/queue_migrate
   YAML
 
+  EMPTY_ENVIRONMENT = "Rails.application.configure do\nend\n".freeze
+
   setup do
     write "config/routes.rb", "Rails.application.routes.draw do\nend\n"
     write "config/database.yml", DATABASE_YML
-    %w[development test].each { |env| write "config/environments/#{env}.rb", "Rails.application.configure do\nend\n" }
+    %w[development test].each { |env| write "config/environments/#{env}.rb", EMPTY_ENVIRONMENT }
   end
 
   def write(path, content)
     FileUtils.mkdir_p(File.dirname(File.join(destination_root, path)))
     File.write(File.join(destination_root, path), content)
+  end
+
+  def assert_environments_untouched
+    %w[development test].each do |env|
+      assert_file("config/environments/#{env}.rb") { |content| assert_equal EMPTY_ENVIRONMENT, content }
+    end
   end
 
   test "writes the initializer with the app's admin controller and mounts Sightline" do
@@ -107,11 +115,37 @@ class InstallGeneratorTest < Rails::Generators::TestCase
     assert_file "config/environments/test.rb", /solid_queue\.connects_to/
   end
 
-  test "a database.yml it doesn't recognize is left alone, with instructions" do
+  test "a database.yml it doesn't recognize is left alone, and so are the environments, with instructions for both" do
     postgres = "development:\n  adapter: postgresql\n  database: app_development\n"
     write "config/database.yml", postgres
     output = run_generator
     assert_equal postgres, File.read(File.join(destination_root, "config/database.yml"))
+    assert_environments_untouched
     assert_match(/add a queue database to development and test by hand/, output)
+    assert_match(/config\.solid_queue\.connects_to = \{ database: \{ writing: :queue \} \}/, output)
+  end
+
+  test "when only one environment has the plain shape, neither changes" do
+    write "config/database.yml", DATABASE_YML.sub("test:\n  <<: *default\n", "test:\n  <<: *default\n  host: db\n")
+                                             .sub("storage/test.sqlite3", "app_test")
+    output = run_generator
+    assert_no_match(/queue/, File.read(File.join(destination_root, "config/database.yml"))[/^development:.*?\n\n/m])
+    assert_environments_untouched
+    assert_match(/by hand/, output)
+  end
+
+  test "without a database.yml, the environments are left alone, with instructions" do
+    FileUtils.rm(File.join(destination_root, "config/database.yml"))
+    output = run_generator %w[--no-queue-in-primary]
+    assert_environments_untouched
+    assert_match(/connects_to/, output)
+  end
+
+  test "a database.yml that already has queue databases still gets the environments connected" do
+    run_generator
+    %w[development test].each { |env| write "config/environments/#{env}.rb", EMPTY_ENVIRONMENT }
+    run_generator
+    assert_file "config/environments/development.rb", /solid_queue\.connects_to/
+    assert_file "config/environments/test.rb", /solid_queue\.connects_to/
   end
 end
