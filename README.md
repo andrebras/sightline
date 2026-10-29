@@ -91,7 +91,8 @@ Sightline brings Mission Control – Jobs with it.
    [Notes and troubleshooting](#notes-and-troubleshooting) if your app keeps Solid Queue in its primary database or
    doesn't use SQLite.
 
-4. **Let your layout yield `:head`**, for Jobs' scripts:
+4. **Let your layout yield `:head`** (optional), so Jobs can ask search engines and Turbo not to index, cache or
+   prefetch its pages. Jobs adds no import map of its own, so it works beside your app's `javascript_importmap_tags`.
 
    ```erb
    <head>

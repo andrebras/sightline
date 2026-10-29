@@ -5,6 +5,12 @@ Each version is a `vX.Y.Z` tag in this repository.
 
 ## [Unreleased]
 
+### Fixed
+
+- Jobs no longer adds Mission Control – Jobs' import map to the page. Its names (`application`, `controllers`) clashed
+  with an app's own import map, so one app's scripts didn't load. `sightline/jobs.js`, a plain script, now does what
+  those scripts did on Jobs' screens, and `yield :head` in the app's layout is optional.
+
 ### Changed
 
 - The README is reorganised: a screenshot, a short "Why", a table of contents, a quick start without edge cases, and
