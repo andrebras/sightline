@@ -1,9 +1,14 @@
+<%# A column per day. No inline styles, so a strict Content Security Policy allows it: the columns come from the grid,
+    and each bar is an empty SVG whose height attribute is its share of the tallest, in the space
+    above the day (application.css styles it). %>
 <% most = [ values.map(&:last).max || 0, 1 ].max %>
-<%= tag.ol class: "sl-panel sl-bars", style: "--sl-bar-count: #{values.size}", aria: { label: label } do %>
+<%= tag.ol class: "sl-panel sl-bars", aria: { label: label } do %>
   <% values.each do |day, value| %>
     <li>
-      <strong><%= sl_format(value) %></strong>
-      <span class="sl-bar" style="height: <%= (100.0 * value / most).round %>%"></span>
+      <span class="sl-bar-track">
+        <strong><%= sl_format(value) %></strong>
+        <svg class="sl-bar" height="<%= (100.0 * value / most).round %>%" aria-hidden="true"></svg>
+      </span>
       <small><%= day.strftime("%a %-d") %></small>
     </li>
   <% end %>

@@ -7,7 +7,8 @@ module Sightline
     #
     # Writes config/initializers/sightline.rb, mounts Sightline, and gives development and test their own Solid Queue
     # database, as production has, so Health and Jobs show real jobs locally. database.yml is only changed when it has
-    # the plain SQLite shape `rails new` writes; otherwise the generator says what to add.
+    # the plain SQLite shape `rails new` writes; otherwise the generator says what to add, and leaves
+    # config/environments alone too, so the app is never half set up.
     #
     # An app that keeps Solid Queue's tables in its primary database (--queue-in-primary, or found when production in
     # database.yml has no queue database) gets no queue databases: its development and test are left as they are.
@@ -41,10 +42,12 @@ module Sightline
 
         File.write(File.join(destination_root, "config/database.yml"), changed) unless changed == yaml
         say_status(changed == yaml ? :identical : :update, "config/database.yml")
+        @queue_databases = true
       end
 
+      # Only once database.yml has the queue databases, so the environments never point at one that isn't there.
       def connect_solid_queue
-        return if queue_in_primary?
+        return unless @queue_databases
 
         QUEUE_ENVIRONMENTS.each do |env|
           file = "config/environments/#{env}.rb"
@@ -113,6 +116,8 @@ module Sightline
       def say_queue_instructions
         say_status :skip, "config/database.yml: add a queue database to development and test by hand " \
                           "(see production's), with migrations_paths: db/queue_migrate", :yellow
+        say_status :skip, "config/environments/{development,test}.rb: then add " \
+                          "config.solid_queue.connects_to = { database: { writing: :queue } } to each", :yellow
       end
     end
   end
