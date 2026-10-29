@@ -64,6 +64,9 @@ Sightline mounts Mission Control at `/<mount>/jobs` and sets it up (`lib/sightli
 - **Layout:** its pages render inside your layout (`layout`, else `application`), under Sightline's header and
   navigation. Mission Control's Bulma stylesheet is left out, because its global classes would restyle your app;
   `sightline/jobs.css` styles its screens with the same `--sl-*` properties. Your route helpers work there too.
+- **Scripts:** Mission Control's import map is left out, so it can't clash with your app's. `sightline/jobs.js`, a
+  plain script, applies a filter as soon as it changes and asks before deleting (Turbo asks instead when your app runs
+  it). Without Turbo in your app, Jobs' pages load as full pages.
 - **Arguments:** hidden in every list and on each job's page, unless `show_job_arguments` is on.
 - **One server:** Mission Control's `server_id` is left out of links when there is one job server.
 - **Actions:** unless `job_actions` is on, any request other than GET or HEAD gets 403 "Job actions are turned off".

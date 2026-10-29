@@ -62,7 +62,7 @@ module Sightline
 
           Sightline is mounted at #{mount_path}. Next:
             1. Make sure #{options[:base_controller]} exists and refuses everyone but admins.
-            2. Your layout should `yield :head`, for Jobs' scripts.
+            2. Optionally, let your layout `yield :head`, for Jobs' meta tags.
             3. bin/rails db:prepare, then run the jobs locally with bin/jobs (or SOLID_QUEUE_IN_PUMA=1).
         TEXT
       end
