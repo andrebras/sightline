@@ -26,6 +26,8 @@ user complains, and a jobs dashboard. Sightline gives you all three, behind the 
 
 ![Sightline's Jobs page: Mission Control's list of failed jobs, inside the app's layout, with the job's arguments hidden](docs/screenshots/jobs.png)
 
+Job actions are switched on here (`c.job_actions = true`); they're off by default.
+
 </details>
 
 ## Why Sightline
@@ -59,6 +61,10 @@ user complains, and a jobs dashboard. Sightline gives you all three, behind the 
 Sightline brings Mission Control – Jobs with it.
 
 ## Quick start
+
+![A terminal creates a new Rails 8 app, adds the gem, generates authentication, an admin flag and Admin::BaseController, runs the Sightline generator and db:prepare, creates an admin user and starts the server. A browser then signs in, opens /admin and shows an empty Overview, Health with a disk space warning, and Jobs with no jobs yet](docs/screenshots/install.gif)
+
+The recording above, sped up, installs Sightline in a brand-new app: the pages work straight away, with no data yet.
 
 1. **Add the gem** to your `Gemfile`. It is installed from GitHub, pinned to a release tag:
 
