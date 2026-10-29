@@ -113,7 +113,7 @@ stylesheet is linked from each page, so your layout needs nothing added.
 
 ## About the screenshots
 
-The pictures in `docs/screenshots/` come from a throwaway Rails 8 app, "Demo Shop", that uses Sightline from this
+The PNG pictures in `docs/screenshots/` come from a throwaway Rails 8 app, "Demo Shop", that uses Sightline from this
 repository, with Solid Queue running inside Puma (`SOLID_QUEUE_IN_PUMA=1`). Its data is made up: generated customers
 and orders, a few finished jobs, one job that fails on purpose, two recurring tasks and one check of its own
 ("Latest order"). The app's layout sets only a sans-serif font and the page margins; everything else is Sightline's
@@ -124,3 +124,11 @@ They were taken with headless Chromium through [Playwright](https://playwright.d
 reduced to 256 colours with ImageMagick (`magick in.png -strip -colors 256 PNG8:out.png`). The Jobs picture is Mission
 Control's list of failed jobs, with job arguments hidden as they are by default. To update them, build a similar app,
 open `/admin`, `/admin/health` and the failed jobs in `/admin/jobs`, and capture them the same way.
+
+`install.gif` is a different app: a brand-new one made with `rails new` (Rails 8.1), with no data. The terminal part is
+the real commands, recorded with [asciinema](https://asciinema.org) and drawn with
+[agg](https://github.com/asciinema/agg) at 2.5 times the speed; it stops once the server is up. In that recording,
+absolute paths in the output were shortened (`~/projects`, `~/.gem`). The browser part is screenshots from Playwright,
+with an address bar and a pointer drawn into the page. Before it, `storage_path` was set to `"storage"` and the job
+processes' host name was changed, as for the screenshots. The two parts were joined and turned into a GIF with
+[ffmpeg](https://ffmpeg.org) (`palettegen` and `paletteuse`, 128 colours, 10 frames a second, 960 pixels wide).
