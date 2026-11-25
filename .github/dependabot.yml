@@ -1,16 +1,18 @@
+# One pull request per gem or action, so a failing update only holds back itself.
+# The Rails parts and RuboCop with its plugins move together, so each gets one shared PR.
 version: 2
 updates:
   - package-ecosystem: bundler
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 10
     groups:
-      bundler:
-        patterns: ["*"]
+      rails:
+        patterns: ["rails", "railties", "action*", "active*"]
+      rubocop:
+        patterns: ["rubocop", "rubocop-*"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-    groups:
-      github-actions:
-        patterns: ["*"]
